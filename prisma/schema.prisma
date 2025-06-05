@@ -1,0 +1,82 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Language {
+  id          Int      @id @default(autoincrement())
+  code        String   @unique @db.VarChar(10)
+  name        String   @db.VarChar(100)
+  nativeName  String   @map("native_name") @db.VarChar(100)
+  flagEmoji   String   @default("🇮🇳") @map("flag_emoji") @db.VarChar(10)
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  // Relations
+  categoryTranslations CategoryTranslation[]
+  rights              Right[]
+
+  @@map("languages")
+}
+
+model Category {
+  id        Int      @id @default(autoincrement())
+  key       String   @unique @db.VarChar(50)
+  icon      String   @db.VarChar(10)
+  createdAt DateTime @default(now()) @map("created_at")
+
+  // Relations
+  translations CategoryTranslation[]
+  rights       Right[]
+
+  @@map("categories")
+}
+
+model CategoryTranslation {
+  id           Int    @id @default(autoincrement())
+  categoryId   Int    @map("category_id")
+  languageCode String @map("language_code") @db.VarChar(10)
+  name         String @db.VarChar(200)
+
+  // Relations
+  category Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  language Language @relation(fields: [languageCode], references: [code], onDelete: Cascade)
+
+  @@unique([categoryId, languageCode])
+  @@map("category_translations")
+}
+
+model Right {
+  id           Int      @id @default(autoincrement())
+  categoryId   Int      @map("category_id")
+  languageCode String   @map("language_code") @db.VarChar(10)
+  title        String   @db.VarChar(500)
+  script       String   @db.Text
+  audioUrl     String?  @map("audio_url") @db.VarChar(500)
+  learnMoreUrl String?  @map("learn_more_url") @db.VarChar(500)
+  isActive     Boolean  @default(true) @map("is_active")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  category Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  language Language @relation(fields: [languageCode], references: [code], onDelete: Cascade)
+
+  @@map("rights")
+}
+
+model AdminUser {
+  id           Int      @id @default(autoincrement())
+  email        String   @unique @db.VarChar(255)
+  passwordHash String   @map("password_hash") @db.VarChar(255)
+  name         String   @db.VarChar(100)
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  @@map("admin_users")
+}
