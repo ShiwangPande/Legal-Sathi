@@ -19,7 +19,7 @@ export function UploadAudio({ onUploadComplete, onUploadError }: UploadAudioProp
   const [error, setError] = useState<string | null>(null)
   const [isUploaded, setIsUploaded] = useState(false)
 
-  const { startUpload, permittedFileInfo, isUploading } = useUploadThing("audioUploader", {
+  const { startUpload, isUploading } = useUploadThing("audioUploader", {
     onClientUploadComplete: (res) => {
       if (res && res[0]) {
         onUploadComplete(res[0].url)
@@ -51,7 +51,7 @@ export function UploadAudio({ onUploadComplete, onUploadError }: UploadAudioProp
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
-    accept: permittedFileInfo?.audio ? generateClientDropzoneAccept(["audio/*"]) : undefined,
+    accept: generateClientDropzoneAccept(["audio/*"]),
     maxFiles: 1,
     maxSize: 16 * 1024 * 1024, // 16MB
   })

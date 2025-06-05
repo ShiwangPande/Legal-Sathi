@@ -78,11 +78,14 @@ export default async function CategoryPage({
 
 
   return (
-    <div className="min-h-screen bg-white">
+  <div className="min-h-screen bg-[#d8e1e8] text-[#304674]">
       {/* Header */}
-      <div className="mobile-header bg-gradient-to-r from-gray-900 to-gray-800 text-white p-4 sticky top-0 z-10">
+      <div className="mobile-header bg-gradient-to-r from-[#304674] to-[#98bad5] text-white p-4 sticky top-0 z-10 shadow-md">
         <div className="flex items-center justify-between max-w-4xl mx-auto">
-          <Link href={`/${langCode}`} className="flex items-center text-white hover:text-gray-300 transition-colors">
+          <Link
+            href={`/${langCode}`}
+            className="flex items-center text-white hover:text-[#c6d3e3] transition-colors"
+          >
             <ChevronLeft className="h-5 w-5 mr-1" />
             <span>Back</span>
           </Link>
@@ -92,7 +95,7 @@ export default async function CategoryPage({
               {category.translations[0]?.name || category.key}
             </h1>
           </div>
-          <div className="w-20"></div>
+          <div className="w-20" />
         </div>
       </div>
 
@@ -100,7 +103,7 @@ export default async function CategoryPage({
       <div className="p-4 md:p-6 mobile-footer-padding">
         {rights.length === 0 ? (
           <div className="text-center py-12">
-            <p className="text-gray-600">
+            <p className="text-[#304674] text-opacity-70">
               {langCode === "hi"
                 ? "इस श्रेणी में अभी तक कोई जानकारी उपलब्ध नहीं है।"
                 : "No information available in this category yet."}
@@ -109,18 +112,22 @@ export default async function CategoryPage({
         ) : (
           <div className="space-y-6 max-w-4xl mx-auto">
             {rights.map((right) => (
-              <div key={right.id} className="rights-card bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">{right.title}</h3>
+              <div
+                key={right.id}
+                className="rights-card bg-[#fefefe] border border-[#b2cbde] rounded-xl p-6 shadow-sm"
+              >
+                <h3 className="text-lg font-semibold text-[#304674] mb-4">
+                  {right.title}
+                </h3>
 
                 {right.audioUrl && (
                   <div className="mb-4">
                     <AudioPlayerWrapper src={right.audioUrl} />
                   </div>
                 )}
-                
 
-                <div className="prose prose-gray max-w-none">
-                  <p className="text-gray-700 leading-relaxed text-base">{right.script}</p>
+                <div className="text-[#304674] text-base leading-relaxed">
+                  {right.script}
                 </div>
 
                 {right.learnMoreUrl && (
@@ -129,7 +136,7 @@ export default async function CategoryPage({
                       href={right.learnMoreUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors"
+                      className="inline-flex items-center px-4 py-2 bg-[#98bad5] text-white rounded-lg hover:bg-[#c6d3e3] transition-colors"
                     >
                       {langCode === "hi" ? "और जानें" : "Learn More"} →
                     </a>

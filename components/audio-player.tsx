@@ -175,74 +175,93 @@ export function UploadThingAudioPlayer({ src, autoPlay = false }: AudioPlayerPro
   }
 
   return (
-    <div className="bg-white border border-gray-300 rounded-xl shadow p-4 space-y-4">
-      <audio ref={audioRef} preload="metadata" src={src} />
+  <div className="bg-[#d8e1e8] border border-[#b2cbde] rounded-xl shadow p-4 space-y-4">
+  <audio ref={audioRef} preload="metadata" src={src} />
 
-      <div className="text-xs flex justify-between font-medium text-gray-600">
-        <span>{formatTime(currentTime)}</span>
-        <span>{formatTime(duration)}</span>
-      </div>
+  <div className="text-xs flex justify-between font-medium text-[#304674]">
+    <span>{formatTime(currentTime)}</span>
+    <span>{formatTime(duration)}</span>
+  </div>
 
-      {/* Progress bar with circle */}
-      <div
-        className="relative h-2 w-full bg-gray-200 rounded-full cursor-pointer"
-        onClick={(e) => {
-          const rect = e.currentTarget.getBoundingClientRect()
-          const percent = (e.clientX - rect.left) / rect.width
-          if (audioRef.current && duration && isFinite(duration)) {
-            audioRef.current.currentTime = percent * duration
-            setCurrentTime(audioRef.current.currentTime)
-          }
-        }}
+  {/* Progress bar with circle */}
+  <div
+    className="relative h-2 w-full rounded-full cursor-pointer"
+    style={{ backgroundColor: "#c6d3e3" }}
+    onClick={(e) => {
+      const rect = e.currentTarget.getBoundingClientRect()
+      const percent = (e.clientX - rect.left) / rect.width
+      if (audioRef.current && duration && isFinite(duration)) {
+        audioRef.current.currentTime = percent * duration
+        setCurrentTime(audioRef.current.currentTime)
+      }
+    }}
+  >
+    <div
+      className="absolute top-0 left-0 h-2 rounded-full"
+      style={{ width: `${progress}%`, backgroundColor: "#304674" }}
+    />
+    <div
+      className="absolute top-1/2 -translate-y-1/2 w-3 h-3 rounded-full"
+      style={{ left: `calc(${progress}% - 6px)`, backgroundColor: "#98bad5" }}
+    />
+  </div>
+
+  {/* Controls */}
+  <div className="flex items-center justify-between">
+    <div className="flex gap-2">
+      <Button onClick={rewind10Seconds} variant="ghost" size="icon" className="text-[#304674] hover:text-[#98bad5]">
+        <SkipBack className="w-5 h-5" />
+      </Button>
+      <Button
+        onClick={togglePlayPause}
+        size="icon"
+        className="bg-[#304674] text-white hover:bg-[#98bad5]"
       >
-        <div
-          className="absolute top-0 left-0 h-2 bg-gray-500 rounded-full"
-          style={{ width: `${progress}%` }}
-        />
-        <div
-          className="absolute top-1/2 -translate-y-1/2 w-3 h-3 bg-black rounded-full"
-          style={{ left: `calc(${progress}% - 6px)` }}
-        />
-      </div>
-
-      {/* Controls */}
-      <div className="flex items-center justify-between">
-        <div className="flex gap-2">
-          <Button onClick={rewind10Seconds} variant="ghost" size="icon">
-            <SkipBack className="w-5 h-5 text-black" />
-          </Button>
-          <Button onClick={togglePlayPause} size="icon" className="bg-black text-white hover:bg-gray-800">
-            {isLoading ? <RefreshCw className="animate-spin w-5 h-5" /> : isPlaying ? <Pause /> : <Play />}
-          </Button>
-          <Button onClick={replay} variant="ghost" size="icon">
-            <RotateCcw className="w-5 h-5 text-black" />
-          </Button>
-        </div>
-
-        {/* Volume */}
-        <div className="flex items-center gap-2 w-40">
-          <Button onClick={toggleMute} variant="ghost" size="icon">
-            {muted || volume === 0 ? <VolumeX className="text-black" /> : <Volume2 className="text-black" />}
-          </Button>
-
-          <Slider.Root
-            className="relative flex items-center select-none touch-none w-full h-4"
-            value={[volume * 100]}
-            onValueChange={handleVolumeChange}
-            max={100}
-            step={1}
-          >
-            <Slider.Track className="bg-gray-300 relative grow rounded-full h-1">
-              <Slider.Range className="absolute bg-gray-700 rounded-full h-1" />
-            </Slider.Track>
-            <Slider.Thumb className="block w-3 h-3 bg-black rounded-full hover:scale-110 transition-transform" />
-          </Slider.Root>
-        </div>
-
-        <Button onClick={downloadAudio} variant="ghost" size="icon">
-          {isDownloading ? <RefreshCw className="animate-spin w-5 h-5 text-black" /> : <Download className="text-black" />}
-        </Button>
-      </div>
+        {isLoading ? (
+          <RefreshCw className="animate-spin w-5 h-5" />
+        ) : isPlaying ? (
+          <Pause />
+        ) : (
+          <Play />
+        )}
+      </Button>
+      <Button onClick={replay} variant="ghost" size="icon" className="text-[#304674] hover:text-[#98bad5]">
+        <RotateCcw className="w-5 h-5" />
+      </Button>
     </div>
+
+    {/* Volume */}
+    <div className="flex items-center gap-2 w-40">
+      <Button onClick={toggleMute} variant="ghost" size="icon" className="text-[#304674] hover:text-[#98bad5]">
+        {muted || volume === 0 ? <VolumeX /> : <Volume2 />}
+      </Button>
+
+      <Slider.Root
+        className="relative flex items-center select-none touch-none w-full h-4"
+        value={[volume * 100]}
+        onValueChange={handleVolumeChange}
+        max={100}
+        step={1}
+      >
+        <Slider.Track className="relative grow rounded-full h-1" style={{ backgroundColor: "#b2cbde" }}>
+          <Slider.Range className="absolute rounded-full h-1" style={{ backgroundColor: "#304674" }} />
+        </Slider.Track>
+        <Slider.Thumb
+          className="block w-3 h-3 rounded-full hover:scale-110 transition-transform"
+          style={{ backgroundColor: "#98bad5" }}
+        />
+      </Slider.Root>
+    </div>
+
+    <Button onClick={downloadAudio} variant="ghost" size="icon" className="text-[#304674] hover:text-[#98bad5]">
+      {isDownloading ? (
+        <RefreshCw className="animate-spin w-5 h-5" />
+      ) : (
+        <Download className="w-5 h-5" />
+      )}
+    </Button>
+  </div>
+</div>
+
   )
 }

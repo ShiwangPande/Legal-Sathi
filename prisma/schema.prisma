@@ -80,3 +80,18 @@ model AdminUser {
 
   @@map("admin_users")
 }
+
+model Volunteer {
+  id           Int      @id @default(autoincrement())
+  name         String   @db.VarChar(200)
+  email        String   @db.VarChar(255)
+  organization String?  @db.VarChar(200)
+  translations Boolean  @default(false)
+  recordings   Boolean  @default(false)
+  boards       Boolean  @default(false)
+  installations Boolean @default(false)
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  @@map("volunteers")
+}

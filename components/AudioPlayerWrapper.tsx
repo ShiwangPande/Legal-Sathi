@@ -25,15 +25,16 @@ export default function AudioPlayerWrapper({ src }: AudioPlayerWrapperProps) {
 
   if (!showPlayer) {
     return (
-      <div className="flex items-center justify-center">
-        <Button
-          onClick={handleListenClick}
-          className="bg-gray-800 hover:bg-gray-900 text-white px-5 py-2 rounded-lg shadow-sm hover:shadow-md transition-all duration-150"
-        >
-          <Headphones className="w-5 h-5 mr-2" />
-          Listen
-        </Button>
-      </div>
+<div className="flex items-center justify-center">
+  <Button
+    onClick={handleListenClick}
+    className="bg-[#304674] hover:bg-[#98bad5] text-white px-5 py-2 rounded-lg shadow-sm hover:shadow-md transition-all duration-150"
+  >
+    <Headphones className="w-5 h-5 mr-2" />
+    Listen
+  </Button>
+</div>
+
     )
   }
 
