@@ -49,7 +49,7 @@ export default async function HomePage() {
         </div>
       </div>
 
-      {/* About Section */}
+      {/* About Section
       <div className="bg-[#c6d3e3] p-8 md:p-12 mt-8">
         <div className="max-w-4xl mx-auto">
           <h2 className="text-2xl md:text-3xl font-bold text-[#304674] mb-4 text-center">About Legal Saathi</h2>
@@ -79,18 +79,18 @@ export default async function HomePage() {
         </div>
       </div>
 
-      {/* Admin Login Link */}
-      <div className="p-6 text-center">
+      // {/* Admin Login Link */}
+      {/* <div className="p-6 text-center">
         <Link href="/sign-in" className="inline-flex items-center text-[#304674] hover:opacity-80 font-medium">
           Admin Access <ArrowRight className="ml-1 h-4 w-4" />
         </Link>
       </div>
 
           <VolunteerForm/>
-      {/* Footer */}
+      Footer
       <div className="p-6 bg-[#304674] text-center text-white">
         <p className="text-sm">Made with ❤️ for daily wage workers across India</p>
-      </div>
+      </div> */}
     </div>
   )
 }

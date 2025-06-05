@@ -21,6 +21,7 @@ model Language {
   // Relations
   categoryTranslations CategoryTranslation[]
   rights              Right[]
+  siteTranslations    SiteTranslation[]
 
   @@map("languages")
 }
@@ -50,6 +51,19 @@ model CategoryTranslation {
 
   @@unique([categoryId, languageCode])
   @@map("category_translations")
+}
+
+model SiteTranslation {
+  id           Int    @id @default(autoincrement())
+  languageCode String @map("language_code") @db.VarChar(10)
+  key          String @db.VarChar(200)
+  value        String @db.Text
+
+  // Relations
+  language Language @relation(fields: [languageCode], references: [code], onDelete: Cascade)
+
+  @@unique([languageCode, key])
+  @@map("site_translations")
 }
 
 model Right {

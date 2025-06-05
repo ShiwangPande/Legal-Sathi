@@ -10,6 +10,8 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { Card, CardContent } from "@/components/ui/card"
 import { Heart, Megaphone, Flag, CheckCircle, AlertCircle, Loader2 } from "lucide-react"
 import Image from "next/image"
+import type { SiteTranslations } from "@/lib/translations"
+import { t } from "@/lib/translations"
 
 interface FormData {
   name: string
@@ -28,7 +30,12 @@ interface SubmissionState {
   message: string
 }
 
-export default function VolunteerForm() {
+interface VolunteerFormProps {
+  translations: SiteTranslations
+  languageCode: string
+}
+
+export default function VolunteerForm({ translations, languageCode }: VolunteerFormProps) {
   const [formData, setFormData] = useState<FormData>({
     name: "",
     email: "",
@@ -82,7 +89,7 @@ export default function VolunteerForm() {
       if (response.ok) {
         setSubmission({
           status: 'success',
-          message: data.message || 'Thank you for volunteering! We will be in touch soon.'
+          message: data.message || t(translations, 'volunteer.form.success', 'Thank you for volunteering! We will be in touch soon.')
         })
         
         // Reset form
@@ -100,14 +107,14 @@ export default function VolunteerForm() {
       } else {
         setSubmission({
           status: 'error',
-          message: data.error || 'Something went wrong. Please try again.'
+          message: data.error || t(translations, 'volunteer.form.error', 'Something went wrong. Please try again.')
         })
       }
     } catch (error) {
       console.error('Submission error:', error)
       setSubmission({
         status: 'error',
-        message: 'Network error. Please check your connection and try again.'
+        message: t(translations, 'volunteer.form.network.error', 'Network error. Please check your connection and try again.')
       })
     }
   }
@@ -119,9 +126,7 @@ export default function VolunteerForm() {
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-8 md:mb-12">
           <div className="mb-6 md:mb-0">
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-[#1e3c64] leading-tight">
-              Volunteer with
-              <br />
-              Legal Saathi
+              {t(translations, 'volunteer.title', 'Volunteer with Legal Saathi')}
             </h1>
           </div>
           <div className="flex-shrink-0">
@@ -154,7 +159,7 @@ export default function VolunteerForm() {
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="space-y-2">
                   <Label htmlFor="name" className="text-lg font-medium text-gray-800">
-                    Name *
+                    {t(translations, 'volunteer.form.name', 'Name')} <span className="text-red-500">*</span>
                   </Label>
                   <Input
                     id="name"
@@ -169,7 +174,7 @@ export default function VolunteerForm() {
 
                 <div className="space-y-2">
                   <Label htmlFor="email" className="text-lg font-medium text-gray-800">
-                    Email *
+                    {t(translations, 'volunteer.form.email', 'Email')} <span className="text-red-500">*</span>
                   </Label>
                   <Input
                     id="email"
@@ -184,7 +189,7 @@ export default function VolunteerForm() {
 
                 <div className="space-y-2">
                   <Label htmlFor="organization" className="text-lg font-medium text-gray-800">
-                    Organization (optional)
+                    {t(translations, 'volunteer.form.organization', 'Organization')} <span className="text-gray-500">({t(translations, 'common.optional', 'optional')})</span>
                   </Label>
                   <Input
                     id="organization"
@@ -197,13 +202,27 @@ export default function VolunteerForm() {
                 </div>
 
                 <div className="space-y-4">
-                  <Label className="text-lg font-medium text-gray-800">How do you want to help?</Label>
+                  <Label className="text-lg font-medium text-gray-800">
+                    {t(translations, 'volunteer.form.help.question', 'How do you want to help?')}
+                  </Label>
                   <div className="space-y-3">
                     {[
-                      { id: "translations", label: "Help with translations" },
-                      { id: "recordings", label: "Contribute recordings" },
-                      { id: "boards", label: "Request boards" },
-                      { id: "installations", label: "Track installations" },
+                      { 
+                        id: "translations", 
+                        label: t(translations, 'volunteer.form.help.translations', 'Help with translations')
+                      },
+                      { 
+                        id: "recordings", 
+                        label: t(translations, 'volunteer.form.help.recordings', 'Contribute recordings')
+                      },
+                      { 
+                        id: "boards", 
+                        label: t(translations, 'volunteer.form.help.boards', 'Request boards')
+                      },
+                      { 
+                        id: "installations", 
+                        label: t(translations, 'volunteer.form.help.installations', 'Track installations')
+                      },
                     ].map((option) => (
                       <div key={option.id} className="flex items-center space-x-3">
                         <Checkbox
@@ -230,10 +249,10 @@ export default function VolunteerForm() {
                     {submission.status === 'loading' ? (
                       <>
                         <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                        Submitting...
+                        {t(translations, 'volunteer.form.submitting', 'Submitting...')}
                       </>
                     ) : (
-                      'Submit'
+                      t(translations, 'volunteer.form.submit', 'Submit')
                     )}
                   </Button>
                 </div>
@@ -243,7 +262,9 @@ export default function VolunteerForm() {
 
           {/* Why Join Us Section */}
           <div className="space-y-8">
-            <h2 className="text-3xl md:text-4xl font-bold text-[#1e3c64]">Why join us</h2>
+            <h2 className="text-3xl md:text-4xl font-bold text-[#1e3c64]">
+              {t(translations, 'volunteer.why.title', 'Why join us')}
+            </h2>
 
             <div className="space-y-6">
               <div className="flex items-start space-x-4">
@@ -251,7 +272,7 @@ export default function VolunteerForm() {
                   <Heart className="w-4 h-4 text-white fill-white" />
                 </div>
                 <p className="text-lg text-[#1e3c64] leading-relaxed">
-                  Spread legal awareness to those who need it most
+                  {t(translations, 'volunteer.why.awareness', 'Spread legal awareness to those who need it most')}
                 </p>
               </div>
 
@@ -260,7 +281,7 @@ export default function VolunteerForm() {
                   <Megaphone className="w-4 h-4 text-white" />
                 </div>
                 <p className="text-lg text-[#1e3c64] leading-relaxed">
-                  Support an initiative that is student-driven and worker-focused
+                  {t(translations, 'volunteer.why.support', 'Support an initiative that is student-driven and worker-focused')}
                 </p>
               </div>
 
@@ -268,7 +289,9 @@ export default function VolunteerForm() {
                 <div className="flex-shrink-0 w-8 h-8 bg-[#304674] rounded-full flex items-center justify-center mt-1">
                   <Flag className="w-4 h-4 text-white" />
                 </div>
-                <p className="text-lg text-[#1e3c64] leading-relaxed">Help expand the mission nationwide</p>
+                <p className="text-lg text-[#1e3c64] leading-relaxed">
+                  {t(translations, 'volunteer.why.expand', 'Help expand the mission nationwide')}
+                </p>
               </div>
             </div>
           </div>
