@@ -4,7 +4,7 @@ import { AddRightForm } from "@/components/add-right-form"
 import { RightsTable } from "@/components/rights-table"
 import { AdminHeader } from "@/components/admin-header"
 import { currentUser } from "@clerk/nextjs/server"
-
+import { isAdmin } from "@/lib/server/admin-auth";
 
 
 async function getLanguages() {
@@ -58,7 +58,11 @@ export default async function AdminDashboard() {
     getRights(),
   ])
   console.log("Languages available in form:", languages)
-
+  const admin = await isAdmin();
+  
+  if (!admin) {
+    redirect('/');
+  }
 
   return (
   <div className="min-h-screen bg-[#f8fafc] text-[#304674]">

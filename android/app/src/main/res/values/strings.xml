@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">LegalSaathi</string>
+    <string name="title_activity_main">LegalSaathi</string>
+    <string name="package_name">com.legalsaathi.app</string>
+    <string name="custom_url_scheme">com.legalsaathi.app</string>
+</resources>
