@@ -10,3 +10,4 @@ export const isAdmin = async (userId: string | null | undefined): Promise<boolea
 
   return adminUserIds.includes(userId);
 };
+

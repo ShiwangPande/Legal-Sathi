@@ -98,6 +98,7 @@ export default async function AdminDashboard() {
           </div>
 
           {/* Rights Table */}
+          
           <div className="lg:col-span-2">
             <RightsTable rights={rights} languages={languages} categories={categories} />
           </div>
