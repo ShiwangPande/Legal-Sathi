@@ -11,9 +11,10 @@ interface RightsTableProps {
   rights: Right[]
   languages: Language[]
   categories: Category[]
+  onEdit?: (right: any) => void
 }
 
-export function RightsTable({ rights, languages, categories }: RightsTableProps) {
+export function RightsTable({ rights, languages, categories, onEdit }: RightsTableProps) {
   const [filterLanguage, setFilterLanguage] = useState<string>("all")
   const [filterCategory, setFilterCategory] = useState<string>("all")
 
@@ -141,14 +142,24 @@ export function RightsTable({ rights, languages, categories }: RightsTableProps)
                   )}
                 </div>
               </div>
-              <Button
-                variant="destructive"
-                size="sm"
-                onClick={() => deleteRight(right.id)}
-                className="bg-[#304674] hover:bg-[#182a49] text-white"
-              >
-                Delete
-              </Button>
+              <div className="flex gap-2">
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  onClick={() => onEdit && onEdit(right)}
+                  className="bg-[#b2cbde] text-[#304674] border border-[#304674]"
+                >
+                  Edit
+                </Button>
+                <Button
+                  variant="destructive"
+                  size="sm"
+                  onClick={() => deleteRight(right.id)}
+                  className="bg-[#304674] hover:bg-[#182a49] text-white"
+                >
+                  Delete
+                </Button>
+              </div>
             </div>
             <p className="text-[#304674] text-sm line-clamp-3">{right.script}</p>
             {right.learn_more_url && (
