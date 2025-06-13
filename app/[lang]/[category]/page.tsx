@@ -3,6 +3,7 @@ import Link from "next/link"
 import { notFound } from "next/navigation"
 import AudioPlayerWrapper from "@/components/AudioPlayerWrapper"
 import { ChevronLeft } from "lucide-react"
+import { getSiteTranslations, t } from "@/lib/translations"
 
 async function getLanguage(code: string) {
   return await prisma.language.findUnique({
@@ -76,6 +77,7 @@ export default async function CategoryPage({
   );
 })}
 
+const translations = await getSiteTranslations(langCode)
 
   return (
   <div className="min-h-screen bg-[#d8e1e8] text-[#304674]">
@@ -104,9 +106,7 @@ export default async function CategoryPage({
         {rights.length === 0 ? (
           <div className="text-center py-12">
             <p className="text-[#304674] text-opacity-70">
-              {langCode === "hi"
-                ? "इस श्रेणी में अभी तक कोई जानकारी उपलब्ध नहीं है।"
-                : "No information available in this category yet."}
+              {t(translations, 'no.info', 'No information available in this category yet.')}
             </p>
           </div>
         ) : (

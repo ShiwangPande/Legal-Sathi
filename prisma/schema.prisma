@@ -44,6 +44,7 @@ model CategoryTranslation {
   categoryId   Int    @map("category_id")
   languageCode String @map("language_code") @db.VarChar(10)
   name         String @db.VarChar(200)
+  noInfo       String @db.VarChar(500)
 
   // Relations
   category Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
