@@ -681,6 +681,7 @@ async function main() {
             categoryId: category.id,
             languageCode: langCode,
             name,
+            noInfo: "",
           },
         });
       }
