@@ -176,7 +176,7 @@ export default function ChatBot() {
         speechSynthesis.cancel();
       }
     };
-  }, []);
+  }, [speechSynthesis]);
 
   const speakText = (text: string) => {
     if (!isAudioEnabled || !speechSynthesis || !selectedLanguage) return;

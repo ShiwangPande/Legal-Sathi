@@ -5,6 +5,14 @@ import AudioPlayerWrapper from "@/components/AudioPlayerWrapper"
 import { ChevronLeft } from "lucide-react"
 import { getSiteTranslations, t } from "@/lib/translations"
 
+interface PageProps {
+  params: Promise<{
+    lang: string;
+    category: string;
+  }>;
+  searchParams?: Promise<{ [key: string]: string | string[] | undefined }>;
+}
+
 async function getLanguage(code: string) {
   return await prisma.language.findUnique({
     where: {
@@ -47,13 +55,9 @@ async function getRights(categoryKey: string, languageCode: string) {
   })
 }
 
-export default async function CategoryPage({
-  params,
-}: {
-  params: { lang: string; category: string }
-}) {
-  const langCode = params.lang
-  const categoryKey = params.category
+export default async function CategoryPage({ params }: PageProps) {
+  // Await the params Promise
+  const { lang: langCode, category: categoryKey } = await params
 
   const language = await getLanguage(langCode)
   if (!language) {
@@ -66,21 +70,10 @@ export default async function CategoryPage({
   }
 
   const rights = await getRights(categoryKey, langCode)
-
-  {rights.map((right) => {
-  console.log("Audio URL:", right.audioUrl);
-  return (
-    <div key={right.id} className="rights-card ...">
-      {/* rest of code */}
-      {right.audioUrl && <AudioPlayerWrapper  src={right.audioUrl} />}
-    </div>
-  );
-})}
-
-const translations = await getSiteTranslations(langCode)
+  const translations = await getSiteTranslations(langCode)
 
   return (
-  <div className="min-h-screen bg-[#d8e1e8] text-[#304674]">
+    <div className="min-h-screen bg-[#d8e1e8] text-[#304674]">
       {/* Header */}
       <div className="mobile-header bg-gradient-to-r from-[#304674] to-[#98bad5] text-white p-4 sticky top-0 z-10 shadow-md">
         <div className="flex items-center justify-between max-w-4xl mx-auto">

@@ -367,6 +367,7 @@ const Chart = React.forwardRef<
     />
   )
 })
+Chart.displayName = "Chart"
 
 export {
   ChartContainer,

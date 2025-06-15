@@ -32,9 +32,10 @@ interface SubmissionState {
 
 interface VolunteerFormProps {
   translations: SiteTranslations
+  languageCode: string
 }
 
-export default function VolunteerForm({ translations }: VolunteerFormProps) {
+export default function VolunteerForm({ translations, languageCode }: VolunteerFormProps) {
   const [formData, setFormData] = useState<FormData>({
     name: "",
     email: "",

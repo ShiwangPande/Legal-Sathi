@@ -50,13 +50,18 @@ export function UploadThingAudioPlayer({ src, autoPlay = false }: AudioPlayerPro
     const audio = audioRef.current
     if (!audio) return
 
-    let timeout: NodeJS.Timeout
-
     setIsLoading(true)
     setError(null)
     setIsPlaying(false)
     setCurrentTime(0)
     setDuration(0)
+
+    const timeout = setTimeout(() => {
+      if (audio.readyState < 3) {
+        setIsLoading(false)
+        setError(`Audio load timeout (attempt ${loadAttempts + 1}/${maxRetries})`)
+      }
+    }, 10000)
 
     const handleLoadedMetadata = () => {
       setDuration(audio.duration)
@@ -74,13 +79,6 @@ export function UploadThingAudioPlayer({ src, autoPlay = false }: AudioPlayerPro
         ? `Load failed (attempt ${loadAttempts + 1}/${maxRetries})`
         : "Failed to load audio after multiple attempts.")
     }
-
-    timeout = setTimeout(() => {
-      if (audio.readyState < 3) {
-        setIsLoading(false)
-        setError(`Audio load timeout (attempt ${loadAttempts + 1}/${maxRetries})`)
-      }
-    }, 10000)
 
     audio.addEventListener("loadedmetadata", handleLoadedMetadata)
     audio.addEventListener("error", handleError)

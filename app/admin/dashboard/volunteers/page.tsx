@@ -17,7 +17,7 @@ export default async function VolunteersPage() {
         </p>
       </div>
       <div className="grid gap-8">
-        <VolunteerForm translations={{}} languageCode="" />
+        <VolunteerForm translations={{}} languageCode={""} />
         <div className="rounded-md border">
           <div className="p-4">
             <h3 className="text-lg font-medium">Volunteer List</h3>

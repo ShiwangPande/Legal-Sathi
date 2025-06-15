@@ -8,6 +8,7 @@ import { useParams } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import Image from "next/image";
 
 interface Founder {
   id: number;
@@ -206,11 +207,12 @@ export default function AboutPage() {
                     <div className="relative w-full md:w-1/3 aspect-[16/9] md:aspect-square bg-[#b2cbde] overflow-hidden">
                       {founder.imageUrl ? (
                         <div className="absolute inset-0">
-                          <img
+                          <Image
                             src={founder.imageUrl}
                             alt={founder.name}
                             className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700"
-                            loading="lazy"
+                            fill
+                            sizes="(max-width: 768px) 100vw, 33vw"
                           />
                           <div className="absolute inset-0 bg-gradient-to-t from-[#304674]/90 via-[#304674]/50 to-transparent" />
                         </div>
@@ -361,11 +363,13 @@ export default function AboutPage() {
                   >
                     {member.imageUrl ? (
                       <div className="flex items-center justify-center bg-[#b2cbde] p-4 md:p-6">
-                        <img
+                        <Image
                           src={member.imageUrl}
                           alt={member.name}
                           className="w-24 h-24 md:w-32 md:h-32 object-cover rounded-full shadow-md border-4 border-[#c6d3e3]"
-                          loading="lazy"
+                          width={128}
+                          height={128}
+                          sizes="(max-width: 768px) 96px, 128px"
                         />
                       </div>
                     ) : (
@@ -448,11 +452,13 @@ export default function AboutPage() {
                     className="group overflow-hidden shadow-md border-0 bg-white rounded-xl md:rounded-2xl flex flex-col md:flex-row items-center gap-4 md:gap-6 p-4 md:p-6 lg:p-8"
                   >
                     {acknowledgement.imageUrl ? (
-                      <img
+                      <Image
                         src={acknowledgement.imageUrl}
                         alt={acknowledgement.name}
                         className="w-16 h-16 md:w-20 md:h-20 object-cover rounded-lg shadow border-2 border-[#c6d3e3]"
-                        loading="lazy"
+                        width={80}
+                        height={80}
+                        sizes="(max-width: 768px) 64px, 80px"
                       />
                     ) : (
                       <div className="w-16 h-16 md:w-20 md:h-20 rounded-lg bg-[#c6d3e3] flex items-center justify-center text-xl md:text-2xl text-[#304674] font-bold">

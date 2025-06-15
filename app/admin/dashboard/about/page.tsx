@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -13,6 +13,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useUploadThing } from "@/lib/uploadthing-client";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import Image from "next/image";
 
 interface Language {
   code: string;
@@ -129,29 +130,28 @@ export default function AboutAdminPage() {
     }
   };
 
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     setLoading(true);
     try {
-      // Fetch all data in parallel with proper error handling
       const [foundersRes, teamRes, acknowledgementsRes] = await Promise.all([
-        fetch("/api/admin/about/founder?languageCode=en").then(res => {
-          if (!res.ok) throw new Error(`Founder API error: ${res.status}`);
-          return res.json();
-        }),
-        fetch("/api/admin/about/team?languageCode=en").then(res => {
-          if (!res.ok) throw new Error(`Team API error: ${res.status}`);
-          return res.json();
-        }),
-        fetch("/api/admin/about/acknowledgement?languageCode=en").then(res => {
-          if (!res.ok) throw new Error(`Acknowledgement API error: ${res.status}`);
-          return res.json();
-        })
+        fetch("/api/admin/about/founders"),
+        fetch("/api/admin/about/team"),
+        fetch("/api/admin/about/acknowledgements")
       ]);
 
-      // Set the data
-      setFounders(foundersRes);
-      setTeamMembers(teamRes);
-      setAcknowledgements(acknowledgementsRes);
+      if (!foundersRes.ok || !teamRes.ok || !acknowledgementsRes.ok) {
+        throw new Error("Failed to fetch data");
+      }
+
+      const [foundersData, teamData, acknowledgementsData] = await Promise.all([
+        foundersRes.json(),
+        teamRes.json(),
+        acknowledgementsRes.json()
+      ]);
+
+      setFounders(foundersData);
+      setTeamMembers(teamData);
+      setAcknowledgements(acknowledgementsData);
     } catch (error) {
       console.error("Error fetching data:", error);
       toast({
@@ -162,12 +162,12 @@ export default function AboutAdminPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [toast]);
 
   useEffect(() => {
     fetchLanguages();
     fetchData();
-  }, []);
+  }, [fetchData]);
 
   const handleImageUpload = async (file: File, setImageUrl: (url: string) => void) => {
     try {
@@ -548,10 +548,13 @@ export default function AboutAdminPage() {
                         />
                         {founderImageUrl && (
                           <div className="mt-2">
-                            <img
+                            <Image
                               src={founderImageUrl}
                               alt="Founder"
                               className="w-24 h-24 lg:w-32 lg:h-32 object-cover rounded"
+                              width={128}
+                              height={128}
+                              sizes="(max-width: 1024px) 96px, 128px"
                             />
                           </div>
                         )}
@@ -614,10 +617,13 @@ export default function AboutAdminPage() {
                             <div className="flex flex-col lg:flex-row lg:items-start justify-between gap-4">
                               <div className="flex flex-col sm:flex-row gap-4">
                                 {founder.imageUrl && (
-                                  <img
+                                  <Image
                                     src={founder.imageUrl}
                                     alt={founder.name}
                                     className="w-24 h-24 object-cover rounded"
+                                    width={96}
+                                    height={96}
+                                    sizes="96px"
                                   />
                                 )}
                                 <div>
@@ -773,10 +779,13 @@ export default function AboutAdminPage() {
                         />
                         {teamImageUrl && (
                           <div className="mt-2">
-                            <img
+                            <Image
                               src={teamImageUrl}
                               alt="Team Member"
                               className="w-24 h-24 lg:w-32 lg:h-32 object-cover rounded"
+                              width={128}
+                              height={128}
+                              sizes="(max-width: 1024px) 96px, 128px"
                             />
                           </div>
                         )}
@@ -839,10 +848,13 @@ export default function AboutAdminPage() {
                             <div className="flex flex-col lg:flex-row lg:items-start justify-between gap-4">
                               <div className="flex flex-col sm:flex-row gap-4">
                                 {member.imageUrl && (
-                                  <img
+                                  <Image
                                     src={member.imageUrl}
                                     alt={member.name}
                                     className="w-24 h-24 object-cover rounded"
+                                    width={96}
+                                    height={96}
+                                    sizes="96px"
                                   />
                                 )}
                                 <div>
@@ -957,10 +969,13 @@ export default function AboutAdminPage() {
                         />
                         {acknowledgementImageUrl && (
                           <div className="mt-2">
-                            <img
+                            <Image
                               src={acknowledgementImageUrl}
                               alt="Acknowledgement"
                               className="w-24 h-24 lg:w-32 lg:h-32 object-cover rounded"
+                              width={128}
+                              height={128}
+                              sizes="(max-width: 1024px) 96px, 128px"
                             />
                           </div>
                         )}
@@ -998,10 +1013,13 @@ export default function AboutAdminPage() {
                             <div className="flex flex-col lg:flex-row lg:items-start justify-between gap-4">
                               <div className="flex flex-col sm:flex-row gap-4">
                                 {ack.imageUrl && (
-                                  <img
+                                  <Image
                                     src={ack.imageUrl}
                                     alt={ack.name}
                                     className="w-24 h-24 object-cover rounded"
+                                    width={96}
+                                    height={96}
+                                    sizes="96px"
                                   />
                                 )}
                                 <div>
