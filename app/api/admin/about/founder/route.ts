@@ -2,7 +2,7 @@
 import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import { prisma } from "@/lib/db";
-import { deleteImageFromUploadThing } from "@/lib/uploadthing";
+
 
 export async function POST(req: Request) {
   try {
@@ -12,7 +12,7 @@ export async function POST(req: Request) {
     }
 
     const body = await req.json();
-    const { title, description, content, imageUrl, languageCode, id, socialLinks, email, contactNumber } = body;
+    const { title, description, content, imageUrl, languageCode, socialLinks, email, contactNumber } = body;
 
     if (!title || !description || !languageCode) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });

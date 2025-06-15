@@ -1,9 +1,5 @@
-import { redirect } from "next/navigation"
+
 import { prisma } from "@/lib/db"
-import { AdminHeader } from "@/components/admin-header"
-import { currentUser } from "@clerk/nextjs/server"
-import { isAdmin } from "@/lib/server/admin-auth";
-import { SignOutAndSignInButton } from "@/components/signout-signinButton"
 import AdminDashboardClient from "./AdminDashboardClient"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { FileText, Users, Info } from "lucide-react";

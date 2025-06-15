@@ -6,7 +6,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import { Loader2, Trash2, ExternalLink, CheckCircle, AlertCircle, User, Users, Heart } from "lucide-react";
+import { Loader2, Trash2, ExternalLink, User, Users, Heart } from "lucide-react";
 import Link from "next/link";
 import { translateAndSaveContent } from "@/lib/translations";
 import { Alert, AlertDescription } from "@/components/ui/alert";

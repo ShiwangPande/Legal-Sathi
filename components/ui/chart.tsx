@@ -355,6 +355,19 @@ function getPayloadConfigFromPayload(
     : config[key as keyof typeof config]
 }
 
+const Chart = React.forwardRef<
+  HTMLDivElement,
+  React.HTMLAttributes<HTMLDivElement>
+>(({ className, ...rest }, ref) => {
+  return (
+    <div
+      ref={ref}
+      className={cn("p-3", className)}
+      {...rest}
+    />
+  )
+})
+
 export {
   ChartContainer,
   ChartTooltip,
@@ -362,4 +375,5 @@ export {
   ChartLegend,
   ChartLegendContent,
   ChartStyle,
+  Chart,
 }

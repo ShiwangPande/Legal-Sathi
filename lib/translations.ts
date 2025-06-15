@@ -195,7 +195,7 @@ export async function translateAndSaveContent(
     const englishContent = await response.json();
     const nonEnglishLanguages = SUPPORTED_TRANSLATION_LANGUAGES.filter(lang => lang !== 'en');
 
-    const successful: { lang: string; apisUsed: any[] }[] = [];
+    const successful: { lang: string; apisUsed: string[] }[] = [];
     const failed = [];
 
     // Process translations with better spacing and retry logic
@@ -259,7 +259,7 @@ export async function translateAndSaveContent(
 
           successful.push({ 
             lang, 
-            apisUsed: translations.map(t => t.apiUsed).filter((api, index, self) => api && self.indexOf(api) === index)
+            apisUsed: translations.map(t => t.apiUsed).filter((api): api is string => api !== undefined)
           });
           
           // Successfully processed this language, break retry loop
