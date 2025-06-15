@@ -1,157 +1,177 @@
-import { Button } from "@/components/ui/button"
-import { Card } from "@/components/ui/card"
-import { getSiteTranslations } from "@/lib/translations"
-import { Metadata } from "next"
+import { prisma } from "@/lib/db"
 import Link from "next/link"
-import Image from "next/image"
+import { ArrowRight } from "lucide-react"
+import VolunteerForm from "@/components/volunteer-form"
 
-interface TranslationData {
-  [key: string]: string;
+async function getLanguages() {
+  return await prisma.language.findMany({
+    orderBy: {
+      name: "asc",
+    },
+  })
 }
 
-export const metadata: Metadata = {
-  title: "LegalSathi - Your Legal Rights",
-  description: "LegalSathi helps daily wage workers understand their legal rights in a simple, accessible way.",
-}
-
-export default async function Home() {
-  const translations = await getSiteTranslations("en") as TranslationData;
+export default async function HomePage() {
+  const languages = await getLanguages()
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="z-10 max-w-5xl w-full items-center justify-between font-mono text-sm lg:flex">
-        <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-          {translations["site.title"] || "Your Legal Rights"}
-        </p>
-        <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:h-auto lg:w-auto lg:bg-none">
-          <a
-            className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{" "}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className="dark:invert"
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
+     <div className="min-h-screen bg-[#d8e1e8]">
+      {/* Header */}
+<div className="bg-[#1e3c64] text-white py-10 px-4 flex flex-col items-center">
+  <img
+    src="/logo.png"
+    alt="Legal Saathi Logo"
+    className="w-28 h-28 mb-4 rounded-full border-4 border-white shadow-lg"
+  />
+  <h1 className="text-3xl md:text-4xl font-bold text-center">Your Legal Rights</h1>
+</div>
+
+      {/* Language Selection */}
+      <div className="p-6 md:p-10">
+        <h2 className="text-xl md:text-2xl font-semibold text-[#304674] mb-8 text-center">
+          अपनी भाषा चुनें • Choose Your Language
+        </h2>
+
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6 max-w-4xl mx-auto">
+          {languages.map((language) => (
+            <Link
+              key={language.code}
+              href={`/${language.code}`}
+              className="flex flex-col items-center justify-center p-6 bg-[#b2cbde] text-[#304674] border-2 border-[#98bad5] rounded-xl hover:shadow-lg transition"
+            >
+              <div className="text-center">
+                <div className="text-4xl md:text-5xl mb-3">{language.flagEmoji}</div>
+                <div className="text-lg font-semibold">{language.nativeName}</div>
+                <div className="text-sm text-[#304674]/70">{language.name}</div>
+              </div>
+            </Link>
+          ))}
+
+
+
+
+
+
+
+
         </div>
       </div>
 
-      <div className="relative flex place-items-center before:absolute before:h-[300px] before:w-[480px] before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-[240px] after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700 before:dark:opacity-10 after:dark:from-sky-900 after:dark:via-[#0141ff] after:dark:opacity-40 before:lg:h-[360px]">
-        <Card className="p-8">
-          <h1 className="text-4xl font-bold mb-4">
-            {translations["site.title"] || "Your Legal Rights"}
-          </h1>
-          <p className="text-xl mb-8">
-            {translations["site.tagline"] || "Choose your language"}
+      {/* About Section
+      <div className="bg-[#c6d3e3] p-8 md:p-12 mt-8">
+        <div className="max-w-4xl mx-auto">
+          <h2 className="text-2xl md:text-3xl font-bold text-[#304674] mb-4 text-center">About Legal Saathi</h2>
+          <p className="text-[#304674]/80 text-center mb-6">
+            Legal Saathi helps daily wage workers understand their legal rights in a simple, accessible way.
+
           </p>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <Link href="/hi">
-              <Button className="w-full">हिंदी</Button>
-            </Link>
-            <Link href="/mr">
-              <Button className="w-full">मराठी</Button>
-            </Link>
-            <Link href="/ta">
-              <Button className="w-full">தமிழ்</Button>
-            </Link>
-            <Link href="/te">
-              <Button className="w-full">తెలుగు</Button>
-            </Link>
-            <Link href="/bn">
-              <Button className="w-full">বাংলা</Button>
-            </Link>
-            <Link href="/gu">
-              <Button className="w-full">ગુજરાતી</Button>
-            </Link>
-            <Link href="/kn">
-              <Button className="w-full">ಕನ್ನಡ</Button>
-            </Link>
-            <Link href="/ml">
-              <Button className="w-full">മലയാളം</Button>
-            </Link>
-            <Link href="/pa">
-              <Button className="w-full">ਪੰਜਾਬੀ</Button>
-            </Link>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
+            <div className="bg-[#b2cbde] p-6 rounded-xl shadow-sm border border-[#98bad5]">
+              <div className="text-3xl mb-3">🔍</div>
+              <h3 className="font-semibold text-lg mb-2 text-[#304674]">Easy to Understand</h3>
+              <p className="text-sm text-[#304674]/70">Simple language with audio explanations for better accessibility.</p>
+            </div>
+
+
+
+
+
+
+
+
+
+
+
+
+            <div className="bg-[#b2cbde] p-6 rounded-xl shadow-sm border border-[#98bad5]">
+              <div className="text-3xl mb-3">🌐</div>
+              <h3 className="font-semibold text-lg mb-2 text-[#304674]">Multiple Languages</h3>
+              <p className="text-sm text-[#304674]/70">Available in various Indian languages to reach more workers.</p>
+            </div>
+
+
+
+
+
+
+
+
+
+
+
+
+            <div className="bg-[#b2cbde] p-6 rounded-xl shadow-sm border border-[#98bad5]">
+              <div className="text-3xl mb-3">📱</div>
+              <h3 className="font-semibold text-lg mb-2 text-[#304674]">Works Offline</h3>
+              <p className="text-sm text-[#304674]/70">Access information even without an internet connection.</p>
+            </div>
           </div>
-        </Card>
+        </div>
       </div>
 
-      <div className="mb-32 grid text-center lg:max-w-5xl lg:w-full lg:mb-0 lg:grid-cols-4 lg:text-left">
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Docs{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Find in-depth information about Next.js features and API.
-          </p>
-        </a>
 
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Learn{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Learn about Next.js in an interactive course with&nbsp;quizzes!
-          </p>
-        </a>
 
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Templates{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Explore the Next.js 13 playground.
-          </p>
-        </a>
 
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Deploy{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
+
+
+
+
+
+      // {/* Admin Login Link */}
+      {/* <div className="p-6 text-center">
+        <Link href="/sign-in" className="inline-flex items-center text-[#304674] hover:opacity-80 font-medium">
+          Admin Access <ArrowRight className="ml-1 h-4 w-4" />
+        </Link>
+
+
+
+
+
+
+
+
+
+
+
       </div>
-    </main>
+
+          <VolunteerForm/>
+      Footer
+      <div className="p-6 bg-[#304674] text-center text-white">
+        <p className="text-sm">Made with ❤️ for daily wage workers across India</p>
+      </div> */}
+    </div>
   )
 }

@@ -80,6 +80,11 @@ export async function GET(req: Request) {
 
 export async function PUT(req: Request) {
   try {
+    const session = await auth();
+    if (!session.userId) {
+      return new NextResponse("Unauthorized", { status: 401 });
+    }
+
     const body = await req.json();
     const { title, description, content, imageUrl, languageCode, id, team, email, contactNumber } = body;
 

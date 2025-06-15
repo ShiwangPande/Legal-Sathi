@@ -232,7 +232,7 @@ async function translateWithGoogleFree(text: string, targetLang: string): Promis
     const data = await response.json();
     
     if (data && data[0] && Array.isArray(data[0])) {
-      return data[0].map((item: { 0: string }) => item[0]).join('');
+      return data[0].map((item: any) => item[0]).join('');
     } else {
       throw new Error('Invalid response format');
     }

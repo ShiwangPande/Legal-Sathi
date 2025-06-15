@@ -134,9 +134,9 @@ export default function AboutAdminPage() {
     setLoading(true);
     try {
       const [foundersRes, teamRes, acknowledgementsRes] = await Promise.all([
-        fetch("/api/admin/about/founders"),
-        fetch("/api/admin/about/team"),
-        fetch("/api/admin/about/acknowledgements")
+        fetch("/api/admin/about/founder?languageCode=en"),
+        fetch("/api/admin/about/team?languageCode=en"),
+        fetch("/api/admin/about/acknowledgement?languageCode=en")
       ]);
 
       if (!foundersRes.ok || !teamRes.ok || !acknowledgementsRes.ok) {
