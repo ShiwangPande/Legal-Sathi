@@ -5,6 +5,8 @@ import { currentUser } from "@clerk/nextjs/server"
 import { isAdmin } from "@/lib/server/admin-auth";
 import { SignOutAndSignInButton } from "@/components/signout-signinButton"
 import AdminDashboardClient from "./AdminDashboardClient"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { FileText, Users, Info } from "lucide-react";
 
 async function getLanguages() {
   return await prisma.language.findMany({
@@ -25,60 +27,47 @@ async function getRights() {
   })
 }
 
-export default async function AdminDashboard() {
-  const user = await currentUser();
-  if (!user) redirect("/sign-in");
-
-  const admin = await isAdmin(user.id);
-  if (!admin) {
-    return (
-      <div className="min-h-screen bg-[#f8fafc] text-[#304674]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 bg-white dark:bg-gray-900 shadow-sm border-b">
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
-            Legal Saathi Admin
-          </h1>
-        </div>
-        <div className="text-center py-20 text-red-600 text-xl font-semibold">
-          403 - You do not have permission to view this page.
-          <br />
-          <div className="mt-4">
-            Please sign in with an admin account to access the admin dashboard.
-            <br />
-            <SignOutAndSignInButton/>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  // create a plain user object with only necessary fields
-  const safeUser = {
-    id: user.id,
-    firstName: user.firstName ?? undefined,
-    lastName: user.lastName,
-    email: user.emailAddresses?.[0]?.emailAddress ?? null,
-    imageUrl: user.imageUrl,
-    emailAddresses: user.emailAddresses?.map((e) => ({ emailAddress: e.emailAddress })) ?? [],
-  }
-
-  const [languages, categories, rights] = await Promise.all([
-    getLanguages(),
-    getCategories(),
-    getRights(),
-  ])
+export default async function DashboardPage() {
+  const [rightsCount, teamCount, volunteerCount] = await Promise.all([
+    prisma.right.count(),
+    prisma.teamMember.count(),
+    prisma.volunteer.count(),
+  ]);
 
   return (
-    <div className="min-h-screen bg-[#f8fafc] text-[#304674]">
-      <AdminHeader user={safeUser} />
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <AdminDashboardClient
-          languages={languages}
-          categories={categories}
-          rights={rights}
-        />
+    <div className="space-y-8">
+      <h2 className="text-3xl font-bold tracking-tight">Dashboard</h2>
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Total Rights</CardTitle>
+            <FileText className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{rightsCount}</div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Team Members</CardTitle>
+            <Users className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{teamCount}</div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Volunteers</CardTitle>
+            <Info className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{volunteerCount}</div>
+          </CardContent>
+        </Card>
       </div>
     </div>
-  )
+  );
 }
 
 

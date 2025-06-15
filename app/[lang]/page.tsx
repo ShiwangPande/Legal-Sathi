@@ -1,7 +1,7 @@
 import { prisma } from "@/lib/db"
 import Link from "next/link"
 import { notFound } from "next/navigation"
-import { ChevronLeft } from "lucide-react"
+import { ChevronLeft, Info } from "lucide-react"
 import { ArrowRight } from "lucide-react"
 import VolunteerForm from "@/components/volunteer-form"
 import { getSiteTranslations, t } from "@/lib/translations"
@@ -77,10 +77,25 @@ export default async function LanguagePage({ params }: Props) {
 
       {/* About Section */}
       <div className="bg-[#c6d3e3] p-8 md:p-12 mt-8">
-        <div className="max-w-4xl mx-auto">
-          <h2 className="text-2xl md:text-3xl font-bold text-[#304674] mb-4 text-center">
-            {t(translations, 'site.about.title', 'About Legal Saathi')}
-          </h2>
+        <div className="max-w-4xl mx-auto ">
+        <h2 className="text-2xl md:text-3xl font-bold text-[#304674] mb-4 text-center">
+  <Link 
+    href={`/${langCode}/about`} 
+    className="group inline-flex items-center justify-center gap-2 
+               text-[#304674] hover:text-[#1d2c3a] 
+               hover:underline decoration-2 underline-offset-4
+               transition-all duration-200 ease-in-out
+               cursor-pointer"
+  >
+    <Info className="h-5 w-5 md:h-6 md:w-6 opacity-70 group-hover:opacity-100 group-hover:rotate-12 transition-all duration-200" />
+    
+    <span className="font-bold">
+      {t(translations, 'site.about.title', 'About Legal Saathi')}
+    </span>
+    
+    <ArrowRight className="h-4 w-4 md:h-5 md:w-5 opacity-60 group-hover:opacity-100 group-hover:translate-x-1 transition-all duration-200" />
+  </Link>
+</h2>
           <p className="text-[#304674]/80 text-center mb-6">
             {t(translations, 'site.about.description', 'Legal Saathi helps daily wage workers understand their legal rights in a simple, accessible way.')}
           </p>

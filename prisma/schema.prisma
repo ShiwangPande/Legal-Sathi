@@ -11,14 +11,19 @@ datasource db {
 }
 
 model Language {
-  id          Int      @id @default(autoincrement())
-  code        String   @unique @db.VarChar(10)
-  name        String   @db.VarChar(100)
-  nativeName  String   @map("native_name") @db.VarChar(100)
-  flagEmoji   String   @default("🇮🇳") @map("flag_emoji") @db.VarChar(10)
-  createdAt   DateTime @default(now()) @map("created_at")
+  id            Int      @id @default(autoincrement())
+  code          String   @unique @db.VarChar(10)
+  name          String   @db.VarChar(100)
+  nativeName    String   @map("native_name") @db.VarChar(100)
+  flagEmoji      String   @default("🇮🇳") @map("flag_emoji") @db.VarChar(10)
+  isActive      Boolean  @default(true) @map("is_active")
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
 
   // Relations
+  founders      Founder[]
+  teamMembers   TeamMember[]
+  acknowledgements Acknowledgement[]
   categoryTranslations CategoryTranslation[]
   rights              Right[]
   siteTranslations    SiteTranslation[]
@@ -109,4 +114,58 @@ model Volunteer {
   updatedAt    DateTime @updatedAt @map("updated_at")
 
   @@map("volunteers")
+}
+
+model Founder {
+  id            Int      @id @default(autoincrement())
+  name          String   @db.VarChar(200)
+  title         String   @db.VarChar(200)
+  bio           String   @db.Text
+  imageUrl      String   @map("image_url") @db.VarChar(500)
+  languageCode  String   @map("language_code") @db.VarChar(10)
+  email         String?  @db.VarChar(255)
+  contactNumber String?  @map("contact_number") @db.VarChar(20)
+  socialLinks   Json?    // Store social media links as JSON
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  language      Language @relation(fields: [languageCode], references: [code], onDelete: Cascade)
+
+  @@map("founders")
+}
+
+model TeamMember {
+  id            Int      @id @default(autoincrement())
+  name          String   @db.VarChar(200)
+  role          String   @db.VarChar(200)
+  bio           String   @db.Text
+  imageUrl      String   @map("image_url") @db.VarChar(500)
+  team          String   @db.VarChar(50) // content, design, or outreach
+  languageCode  String   @map("language_code") @db.VarChar(10)
+  email         String?  @db.VarChar(255)
+  contactNumber String?  @map("contact_number") @db.VarChar(20)
+  socialLinks   Json?    // Store social media links as JSON
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  language      Language @relation(fields: [languageCode], references: [code], onDelete: Cascade)
+
+  @@map("team_members")
+}
+
+model Acknowledgement {
+  id            Int      @id @default(autoincrement())
+  name          String   @db.VarChar(200)
+  contribution  String   @db.Text
+  imageUrl      String?  @map("image_url") @db.VarChar(500)
+  languageCode  String   @map("language_code") @db.VarChar(10)
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  language      Language @relation(fields: [languageCode], references: [code], onDelete: Cascade)
+
+  @@map("acknowledgements")
 }

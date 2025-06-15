@@ -1,0 +1,19 @@
+{
+  "about": {
+    "title": "About LegalSathi",
+    "subtitle": "Empowering citizens with legal knowledge and support through technology and community",
+    "tabs": {
+      "founders": "Founders",
+      "team": "Team Members",
+      "acknowledgements": "Acknowledgements"
+    },
+    "noContent": {
+      "founders": "No founder information available in this language.",
+      "team": "No team member information available in this language.",
+      "acknowledgements": "No acknowledgement information available in this language."
+    },
+    "backToHome": "Back to Home",
+    "tryAgain": "Try Again",
+    "error": "Failed to load content. Please try again later."
+  }
+} 
