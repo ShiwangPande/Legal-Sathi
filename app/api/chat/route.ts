@@ -1,17 +1,19 @@
 import { NextResponse } from 'next/server';
 
-const SYSTEM_PROMPT = `You are a helpful legal assistant specializing in Indian labor law and workers' rights. Provide accurate, practical advice about:
-- Minimum wage laws
-- Working hours and overtime
-- Leave entitlements
-- Workplace safety
-- Harassment and discrimination
-- Termination and layoffs
-- Employment contracts
-- Benefits and social security
-- Government schemes for workers
+const SYSTEM_PROMPT = `You are a knowledgeable legal assistant specializing in Indian employment and labor law. When users ask about employment law topics, provide detailed, practical information covering:
 
-Always remind users to consult a qualified lawyer for specific legal matters. Keep responses concise but informative.`;
+- Minimum wage laws and salary regulations
+- Working hours, overtime, and break requirements
+- Leave entitlements (casual, sick, maternity, etc.)
+- Workplace safety standards and regulations
+- Sexual harassment prevention and grievance procedures
+- Wrongful termination and layoff procedures
+- Employment contract terms and conditions
+- Provident Fund, ESI, and other benefits
+- Labor court procedures and dispute resolution
+- Government schemes for workers (MGNREGA, etc.)
+
+Provide specific, actionable information with relevant sections of laws when applicable. Always conclude by advising users to consult a qualified employment lawyer for case-specific legal advice.`;
 
 // OpenAI API Key Manager - Server-side version
 class OpenAIManager {
@@ -37,8 +39,8 @@ class OpenAIManager {
         body: JSON.stringify({
           model: 'gpt-3.5-turbo',
           messages,
-          max_tokens: 200, // Reduced token limit for cost savings
-          temperature: 0.7,
+          max_tokens: 1000, // Increased for more detailed responses
+          temperature: 0.3, // Lower temperature for more consistent legal advice
         }),
       });
 
@@ -50,6 +52,7 @@ class OpenAIManager {
 
       const data = await response.json();
       console.log('Successfully completed API call');
+      console.log('Response preview:', data.choices[0]?.message?.content?.substring(0, 100));
       return data;
       
     } catch (error: any) {
@@ -97,6 +100,7 @@ export async function POST(req: Request) {
     }
 
     console.log(`Processing request in ${getLanguageName(language)} with ${openaiManager.getApiKeyCount()} available API keys`);
+    console.log('User message:', message);
 
     const messages = [
       {
@@ -109,13 +113,20 @@ export async function POST(req: Request) {
       }
     ];
 
-    const data = await openaiManager.createCompletion(messages, {
-      model: 'gpt-3.5-turbo',
-      max_tokens: 500,
-      temperature: 0.7,
-    });
+    const data = await openaiManager.createCompletion(messages);
 
-    const aiResponse = data.choices[0]?.message?.content || 'I apologize, but I could not generate a response. Please try again.';
+    const aiResponse = data.choices[0]?.message?.content;
+    
+    if (!aiResponse) {
+      console.error('No response content from OpenAI');
+      return NextResponse.json(
+        { error: 'Failed to generate response' },
+        { status: 500 }
+      );
+    }
+
+    console.log('AI Response length:', aiResponse.length);
+    console.log('AI Response preview:', aiResponse.substring(0, 200));
 
     return NextResponse.json({
       response: aiResponse,
@@ -130,14 +141,14 @@ export async function POST(req: Request) {
     let errorMessage = "I'm having trouble processing your request. Please try again later.";
     let statusCode = 500;
     
-    if (error.message.includes('All') && error.message.includes('API keys exhausted')) {
-      errorMessage = "All our AI services are currently busy. Please try again in a few moments.";
-      statusCode = 503;
-    } else if (error.message.includes('rate limited')) {
+    if (error.message.includes('rate limited')) {
       errorMessage = "Our service is experiencing high demand. Please try again shortly.";
       statusCode = 429;
     } else if (error.message.includes('quota exceeded')) {
       errorMessage = "Service temporarily unavailable due to usage limits. Please try again later.";
+      statusCode = 503;
+    } else if (error.message.includes('insufficient_quota')) {
+      errorMessage = "API quota exceeded. Please check your OpenAI billing.";
       statusCode = 503;
     }
     
