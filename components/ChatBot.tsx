@@ -95,7 +95,7 @@ const SAMPLE_QUESTIONS = {
     "ਭਾਰਤ ਵਿੱਚ ਘੱਟੋ-ਘੱਟ ਮਜ਼ਦੂਰੀ ਦਰ ਕੀ ਹਨ?",
     "ਮੈਂ ਕਾਨੂੰਨੀ ਤੌਰ 'ਤੇ ਦਿਨ ਵਿੱਚ ਕਿੰਨੇ ਘੰਟੇ ਕੰਮ ਕਰ ਸਕਦਾ ਹਾਂ?",
     "ਨੌਕਰੀ ਖਤਮ ਕਰਨ ਦੌਰਾਨ ਮੇਰੇ ਅਧਿਕਾਰ ਕੀ ਹਨ?",
-    "ਮਾਲਕ ਦੇ ਖਿਲਾਫ਼ ਸ਼ਿਕਾਇਤ ਕਿਵੇਂ ਦਰਜ਼ ਕਰਾਂ?",
+    "ਮਾਲਕ ਦੇ ਖਿਲਾਫ਼ ਸ਼ਿਕਾਇਤ ਕਿ൵ੇਂ ਦਰਜ਼ ਕਰਾਂ?",
     "ਮੈਂ ਕਿਹੜੇ ਲਾਭਾਂ ਦਾ ਹੱਕਦਾਰ ਹਾਂ?",
     "ਕੰਮ ਦੀ ਜਗ੍ਹਾ 'ਤੇ ਪਰੇਸ਼ਾਨੀ ਨਾਲ ਕਿർਨਾ ਜਾਵੇ?",
     "ਨੋਟਿਸ ਮਿਆਦ ਦੀ ਲੋੜ ਕੀ ਹੈ?"
@@ -588,7 +588,7 @@ const cn = (...classes) => classes.filter(Boolean).join(' ');
   return (
     <>
       <style>{styles}</style>
-      <div className="fixed bottom-6 right-6 z-50">
+      <div className="fixed bottom-6 right-6 z-50 sm:bottom-6 sm:right-6 mt-16 sm:mt-0">
         {!isOpen ? (
           <div className="relative">
             <Button
@@ -617,8 +617,8 @@ const cn = (...classes) => classes.filter(Boolean).join(' ');
           </div>
         ) : (
           <Card className={cn(
-            "w-[calc(100vw-3rem)] sm:w-[380px] md:w-[420px] bg-white shadow-2xl rounded-2xl flex flex-col overflow-hidden animate-slide-up gradient-border",
-            isMinimized ? "h-16" : "h-[calc(100vh-3rem)] sm:h-[700px]"
+            "w-[calc(100vw-2rem)] sm:w-[380px] md:w-[420px] bg-white shadow-2xl rounded-2xl flex flex-col overflow-hidden animate-slide-up gradient-border",
+            isMinimized ? "h-16" : "h-[calc(100vh-6rem)] sm:h-[700px]"
           )}>
             {/* Header */}
             <div className="p-3 sm:p-4 flex items-center justify-between bg-gradient-to-r from-[#304674] to-[#1e3a5f] text-white rounded-t-2xl">
