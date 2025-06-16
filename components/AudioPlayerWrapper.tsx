@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Headphones } from "lucide-react"
 
 const AudioPlayer = dynamic(
-  () => import("./audio-player").then((mod) => mod.UploadThingAudioPlayer),
+  () => import("./audio-player"),
   { ssr: false }
 )
 

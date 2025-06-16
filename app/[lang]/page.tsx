@@ -84,9 +84,16 @@ export default async function LanguagePage({ params }: Props) {
   </div>
 
   {/* 👉 for mobile hint only */}
+  {/* 👉 mobile */}
   <div className="mt-2 text-sm text-gray-600 md:hidden animate-pulse">
     👉 {langCode === "hi" ? "जानिए कैसे मदद करता है" : "Tap to learn more"}
   </div>
+
+  {/* 👉 desktop */}
+  <div className="mt-2 hidden md:block text-sm text-gray-600 animate-pulse">
+    👉 {langCode === "hi" ? "और जानिए कि यह कैसे मदद करता है" : "Click to explore more about Legal Saathi"}
+  </div>
+
 </Link>
 
 
