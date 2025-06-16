@@ -567,12 +567,9 @@ const MarkdownRenderer = ({ text }) => {
       .replace(/`(.*?)`/g, '<code class="bg-gray-100 px-1 py-0.5 rounded text-sm">$1</code>')
       // Links [text](url)
       .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" class="text-blue-600 hover:underline" target="_blank" rel="noopener noreferrer">$1</a>')
-      // Line breaks
       .replace(/\n/g, '<br/>')
-      // Lists - simple implementation
       .replace(/^\* (.+)$/gm, '<li class="ml-4">• $1</li>')
       .replace(/^- (.+)$/gm, '<li class="ml-4">• $1</li>')
-      // Numbers lists
       .replace(/^\d+\. (.+)$/gm, '<li class="ml-4 list-decimal">$1</li>');
 
     return html;
