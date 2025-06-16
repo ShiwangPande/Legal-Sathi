@@ -97,7 +97,7 @@ const SAMPLE_QUESTIONS = {
     "ਨੌਕਰੀ ਖਤਮ ਕਰਨ ਦੌਰਾਨ ਮੇਰੇ ਅਧਿਕਾਰ ਕੀ ਹਨ?",
     "ਮਾਲਕ ਦੇ ਖਿਲਾਫ਼ ਸ਼ਿਕਾਇਤ ਕਿਵੇਂ ਦਰਜ਼ ਕਰਾਂ?",
     "ਮੈਂ ਕਿਹੜੇ ਲਾਭਾਂ ਦਾ ਹੱਕਦਾਰ ਹਾਂ?",
-    "ਕੰਮ ਦੀ ਜਗ੍ਹਾ 'ਤੇ ਪਰੇਸ਼ਾਨੀ ਨਾਲ ਕਿਵੇਂ ਨਿਪਟਿਆ ਜਾਵੇ?",
+    "ਕੰਮ ਦੀ ਜਗ੍ਹਾ 'ਤੇ ਪਰੇਸ਼ਾਨੀ ਨਾਲ ਕਿർਨਾ ਜਾਵੇ?",
     "ਨੋਟਿਸ ਮਿਆਦ ਦੀ ਲੋੜ ਕੀ ਹੈ?"
   ],
   ta: [
@@ -593,123 +593,98 @@ const cn = (...classes) => classes.filter(Boolean).join(' ');
       <style>{styles}</style>
       <div className="fixed bottom-6 right-6 z-50">
         {!isOpen ? (
-      <div className="relative">
-      <Button
-        onClick={() => setIsOpen(true)}
-        className="h-16 w-16 rounded-full bg-gradient-to-br from-[#304674] to-[#1e3a5f] hover:from-[#1e3a5f] hover:to-[#304674] text-white shadow-xl transition-transform duration-300 ease-in-out transform hover:scale-110 group animate-glow"
-      >
-        <Bot className="h-8 w-8 drop-shadow-md transition-transform duration-300 group-hover:scale-110 animate-bounce-custom" />
-      </Button>
-    
-      {showWelcomeMessage && (
-        <div className="absolute bottom-24 right-0 md:right-2">
-          <div className="relative animate-slide-in-right">
-            {/* Message Box */}
-            <div className="bg-gradient-to-br from-[#304674]/90 to-[#1e3a5f]/90 backdrop-blur-lg rounded-2xl px-6 py-4 shadow-xl max-w-[300px] w-[90vw] sm:w-[280px] transition-transform transform hover:scale-105 border border-white/10">
-              <div className="flex items-center gap-2 mb-2">
-                <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-                <span className="text-white font-semibold text-sm">Legal Assistant Online</span>
+          <div className="relative">
+            <Button
+              onClick={() => setIsOpen(true)}
+              className="h-14 w-14 sm:h-16 sm:w-16 rounded-full bg-gradient-to-br from-[#304674] to-[#1e3a5f] hover:from-[#1e3a5f] hover:to-[#304674] text-white shadow-xl transition-transform duration-300 ease-in-out transform hover:scale-110 group animate-glow"
+            >
+              <Bot className="h-6 w-6 sm:h-8 sm:w-8 drop-shadow-md transition-transform duration-300 group-hover:scale-110 animate-bounce-custom" />
+            </Button>
+            
+            {showWelcomeMessage && (
+              <div className="absolute bottom-20 right-0 sm:bottom-24 sm:right-2">
+                <div className="relative animate-slide-in-right">
+                  <div className="bg-gradient-to-br from-[#304674]/90 to-[#1e3a5f]/90 backdrop-blur-lg rounded-2xl px-4 sm:px-6 py-3 sm:py-4 shadow-xl max-w-[280px] w-[90vw] sm:w-[300px] transition-transform transform hover:scale-105 border border-white/10">
+                    <div className="flex items-center gap-2 mb-2">
+                      <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                      <span className="text-white font-semibold text-sm">Legal Assistant Online</span>
+                    </div>
+                    <p className="text-white/90 text-sm leading-relaxed">
+                      Hi there! 👋 I'm your AI legal assistant.<br /> Need help with employment law or worker rights in India? Click to start!
+                    </p>
+                  </div>
+                  <div className="absolute top-full right-10 w-0 h-0 border-l-8 border-r-8 border-t-8 border-l-transparent border-r-transparent border-t-[#1e3a5f]"></div>
+                </div>
               </div>
-              <p className="text-white/90 text-sm leading-relaxed">
-                Hi there! 👋 I'm your AI legal assistant.<br /> Need help with employment law or worker rights in India? Click to start!
-              </p>
-            </div>
-    
-            {/* Pointer Arrow */}
-            <div className="absolute top-full right-10 w-0 h-0 border-l-8 border-r-8 border-t-8 border-l-transparent border-r-transparent border-t-[#1e3a5f]"></div>
+            )}
           </div>
-        </div>
-      )}
-    </div>
-    
         ) : (
           <Card className={cn(
-            "w-[380px] md:w-[420px] bg-white shadow-2xl rounded-2xl flex flex-col overflow-hidden animate-slide-up gradient-border",
-            isMinimized ? "h-16" : "h-[700px]"
+            "w-[calc(100vw-3rem)] sm:w-[380px] md:w-[420px] bg-white shadow-2xl rounded-2xl flex flex-col overflow-hidden animate-slide-up gradient-border",
+            isMinimized ? "h-16" : "h-[calc(100vh-3rem)] sm:h-[700px]"
           )}>
-            {/* Enhanced Header */}
-            <div className="p-4 flex items-center justify-between bg-gradient-to-r from-[#304674] to-[#1e3a5f] text-white rounded-t-2xl">
-              <div className="flex items-center gap-3">
+            {/* Header */}
+            <div className="p-3 sm:p-4 flex items-center justify-between bg-gradient-to-r from-[#304674] to-[#1e3a5f] text-white rounded-t-2xl">
+              <div className="flex items-center gap-2 sm:gap-3">
                 <div className="relative">
-                  <Bot className="h-6 w-6" />
-                  <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-400 rounded-full animate-pulse-custom"></div>
+                  <Bot className="h-5 w-5 sm:h-6 sm:w-6" />
+                  <div className="absolute -top-1 -right-1 w-2 h-2 sm:w-3 sm:h-3 bg-green-400 rounded-full animate-pulse-custom"></div>
                 </div>
                 <div>
-                  <h3 className="font-bold text-lg">Legal Assistant AI</h3>
-                  <p className="text-xs text-white/80">
+                  <h3 className="font-bold text-base sm:text-lg">Legal Assistant AI</h3>
+                  <p className="text-[10px] sm:text-xs text-white/80">
                     {currentLanguage?.flag} {currentLanguage?.name} • Online
                   </p>
                 </div>
               </div>
               
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1 sm:gap-2">
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="h-8 w-8 text-white hover:bg-white/20 transition-colors"
+                  className="h-7 w-7 sm:h-8 sm:w-8 text-white hover:bg-white/20 transition-colors"
                   onClick={() => setIsAudioEnabled(!isAudioEnabled)}
                   title={isAudioEnabled ? "Disable audio" : "Enable audio"}
                 >
-                  {isAudioEnabled ? <Volume2 className="h-4 w-4" /> : <VolumeX className="h-4 w-4" />}
+                  {isAudioEnabled ? <Volume2 className="h-3 w-3 sm:h-4 sm:w-4" /> : <VolumeX className="h-3 w-3 sm:h-4 sm:w-4" />}
                 </Button>
                 
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="h-8 w-8 text-white hover:bg-white/20 transition-colors"
+                  className="h-7 w-7 sm:h-8 sm:w-8 text-white hover:bg-white/20 transition-colors"
                   onClick={() => setIsMinimized(!isMinimized)}
                   title={isMinimized ? "Maximize" : "Minimize"}
                 >
-                  {isMinimized ? <Maximize2 className="h-4 w-4" /> : <Minimize2 className="h-4 w-4" />}
+                  {isMinimized ? <Maximize2 className="h-3 w-3 sm:h-4 sm:w-4" /> : <Minimize2 className="h-3 w-3 sm:h-4 sm:w-4" />}
                 </Button>
                 
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="h-8 w-8 text-white hover:bg-white/20 transition-colors"
+                  className="h-7 w-7 sm:h-8 sm:w-8 text-white hover:bg-white/20 transition-colors"
                   onClick={() => setIsOpen(false)}
                   title="Close chat"
                 >
-                  <X className="h-4 w-4" />
+                  <X className="h-3 w-3 sm:h-4 sm:w-4" />
                 </Button>
               </div>
             </div>
 
             {!isMinimized && (
               <>
-                {/* API Error */}
-                {apiError && (
-                  <div className="p-4 bg-red-50 border-b border-red-200">
-                    <div className="flex items-center gap-3 text-red-700">
-                      <AlertCircle className="h-5 w-5" />
-                      <div>
-                        <p className="font-medium">Connection Error</p>
-                        <p className="text-sm text-red-600">{apiError}</p>
-                      </div>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="h-6 w-6 text-red-700 hover:bg-red-100"
-                        onClick={() => setApiError('')}
-                      >
-                        <X className="h-3 w-3" />
-                      </Button>
-                    </div>
-                  </div>
-                )}
-
-                {/* Enhanced Language Selector */}
-                <div className="p-4 border-b bg-gradient-to-r from-gray-50 to-blue-50">
-                  <div className="flex items-center justify-between mb-3">
+                {/* Language Selector */}
+                <div className="p-3 sm:p-4 border-b bg-gradient-to-r from-gray-50 to-blue-50">
+                  <div className="flex items-center justify-between mb-2 sm:mb-3">
                     <div className="flex items-center gap-2">
-                      <Globe className="h-4 w-4 text-gray-600" />
-                      <span className="text-sm font-medium text-gray-700">Language</span>
+                      <Globe className="h-3 w-3 sm:h-4 sm:w-4 text-gray-600" />
+                      <span className="text-xs sm:text-sm font-medium text-gray-700">Language</span>
                     </div>
                     {messages.length > 0 && (
                       <Button
                         variant="ghost"
                         size="sm"
-                        className="text-xs text-gray-600 hover:text-gray-800"
+                        className="text-[10px] sm:text-xs text-gray-600 hover:text-gray-800"
                         onClick={clearChat}
                       >
                         <RefreshCw className="h-3 w-3 mr-1" />
@@ -721,7 +696,7 @@ const cn = (...classes) => classes.filter(Boolean).join(' ');
                   <select
                     value={selectedLanguage}
                     onChange={(e) => setSelectedLanguage(e.target.value)}
-                    className="w-full p-3 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-white"
+                    className="w-full p-2 sm:p-3 border border-gray-300 rounded-lg text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-white"
                   >
                     {LANGUAGES.map((lang) => (
                       <option key={lang.code} value={lang.code}>
@@ -732,7 +707,7 @@ const cn = (...classes) => classes.filter(Boolean).join(' ');
                 </div>
 
                 {/* Messages Area */}
-                <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-gradient-to-b from-gray-50 to-white scrollbar-thin">
+                <div className="flex-1 overflow-y-auto p-3 sm:p-4 space-y-3 sm:space-y-4 bg-gradient-to-b from-gray-50 to-white scrollbar-thin">
                   {messages.length === 0 ? (
                     <div className="text-center space-y-6 animate-fade-in">
                       {/* Legal Topics */}
@@ -901,9 +876,9 @@ const cn = (...classes) => classes.filter(Boolean).join(' ');
                   <div ref={messagesEndRef} />
                 </div>
 
-                {/* Enhanced Input Area */}
-                <div className="p-4 border-t bg-white">
-                  <div className="flex gap-3">
+                {/* Input Area */}
+                <div className="p-3 sm:p-4 border-t bg-white">
+                  <div className="flex gap-2 sm:gap-3">
                     <div className="flex-1 relative">
                       <input
                         ref={inputRef}
@@ -912,7 +887,7 @@ const cn = (...classes) => classes.filter(Boolean).join(' ');
                         onChange={(e) => setInput(e.target.value)}
                         onKeyPress={(e) => e.key === 'Enter' && handleSend()}
                         placeholder="💬 Ask me anything about Indian labor law..."
-                        className="w-full px-4 py-3 pr-12 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-white placeholder-gray-500"
+                        className="w-full px-3 sm:px-4 py-2 sm:py-3 pr-10 sm:pr-12 border border-gray-300 rounded-xl text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-white placeholder-gray-500"
                         disabled={isLoading}
                       />
                       
@@ -920,10 +895,10 @@ const cn = (...classes) => classes.filter(Boolean).join(' ');
                         <Button
                           variant="ghost"
                           size="icon"
-                          className="absolute right-2 top-1/2 transform -translate-y-1/2 h-8 w-8 text-gray-400 hover:text-gray-600"
+                          className="absolute right-1 sm:right-2 top-1/2 transform -translate-y-1/2 h-6 w-6 sm:h-8 sm:w-8 text-gray-400 hover:text-gray-600"
                           onClick={() => setInput('')}
                         >
-                          <X className="h-4 w-4" />
+                          <X className="h-3 w-3 sm:h-4 sm:w-4" />
                         </Button>
                       )}
                     </div>
@@ -931,23 +906,23 @@ const cn = (...classes) => classes.filter(Boolean).join(' ');
                     <Button
                       onClick={handleSend}
                       disabled={!input.trim() || isLoading}
-                      className="px-6 py-3 bg-gradient-to-r from-[#304674] to-[#1e3a5f] hover:from-[#1e3a5f] hover:to-[#304674] text-white rounded-xl transition-all duration-200 flex items-center gap-2 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed hover:scale-105 active:scale-95"
+                      className="px-4 sm:px-6 py-2 sm:py-3 bg-gradient-to-r from-[#304674] to-[#1e3a5f] hover:from-[#1e3a5f] hover:to-[#304674] text-white rounded-xl transition-all duration-200 flex items-center gap-1 sm:gap-2 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed hover:scale-105 active:scale-95"
                     >
                       {isLoading ? (
-                        <Loader2 className="h-4 w-4 animate-spin" />
+                        <Loader2 className="h-3 w-3 sm:h-4 sm:w-4 animate-spin" />
                       ) : (
-                        <Send className="h-4 w-4" />
+                        <Send className="h-3 w-3 sm:h-4 sm:w-4" />
                       )}
-                      <span className="font-medium">Send</span>
+                      <span className="text-xs sm:text-sm font-medium">Send</span>
                     </Button>
                   </div>
                   
                   {/* Quick Actions */}
-                  <div className="flex flex-col gap-2 mt-3">
-                    <div className="flex items-center justify-between text-xs">
-                      <div className="flex items-center gap-2 text-gray-500">
-                        <div className="flex items-center gap-1.5">
-                          <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                  <div className="flex flex-col gap-2 mt-2 sm:mt-3">
+                    <div className="flex items-center justify-between text-[10px] sm:text-xs">
+                      <div className="flex items-center gap-1 sm:gap-2 text-gray-500">
+                        <div className="flex items-center gap-1 sm:gap-1.5">
+                          <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-green-400 rounded-full animate-pulse"></div>
                           <span>AI Assistant Online</span>
                         </div>
                         <span className="text-gray-400">•</span>
@@ -959,22 +934,22 @@ const cn = (...classes) => classes.filter(Boolean).join(' ');
                       <Button
                         variant="outline"
                         size="sm"
-                        className="flex-1 h-8 text-xs border-blue-200 text-blue-700 hover:bg-blue-50 hover:border-blue-300 transition-all duration-200"
+                        className="flex-1 h-7 sm:h-8 text-[10px] sm:text-xs border-blue-200 text-blue-700 hover:bg-blue-50 hover:border-blue-300 transition-all duration-200"
                         onClick={() => setInput("What are my basic rights as an employee in India?")}
                       >
-                        <span className="flex items-center gap-1.5">
-                          <span className="text-base">💼</span>
+                        <span className="flex items-center gap-1 sm:gap-1.5">
+                          <span className="text-sm sm:text-base">💼</span>
                           <span>Employee Rights</span>
                         </span>
                       </Button>
                       <Button
                         variant="outline"
                         size="sm"
-                        className="flex-1 h-8 text-xs border-blue-200 text-blue-700 hover:bg-blue-50 hover:border-blue-300 transition-all duration-200"
+                        className="flex-1 h-7 sm:h-8 text-[10px] sm:text-xs border-blue-200 text-blue-700 hover:bg-blue-50 hover:border-blue-300 transition-all duration-200"
                         onClick={() => setInput("How do I file a complaint against workplace harassment?")}
                       >
-                        <span className="flex items-center gap-1.5">
-                          <span className="text-base">🛡️</span>
+                        <span className="flex items-center gap-1 sm:gap-1.5">
+                          <span className="text-sm sm:text-base">🛡️</span>
                           <span>Harassment Help</span>
                         </span>
                       </Button>
