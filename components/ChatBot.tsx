@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { MessageSquare, X, Send, Volume2, VolumeX, Loader2, AlertCircle, Globe } from "lucide-react";
+import { MessageSquare, X, Send, Volume2, VolumeX, Loader2, Globe, AlertCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface Message {
@@ -11,155 +11,143 @@ interface Message {
   text: string;
   isUser: boolean;
   timestamp: Date;
-  error?: boolean;
 }
 
-const SUPPORTED_LANGUAGES = [
+const LANGUAGES = [
   { code: 'en', name: 'English' },
-  { code: 'hi', name: 'हिंदी (Hindi)' },
-  { code: 'bn', name: 'বাংলা (Bengali)' },
-  { code: 'gu', name: 'ગુજરાતી (Gujarati)' },
-  { code: 'kn', name: 'ಕನ್ನಡ (Kannada)' },
-  { code: 'ml', name: 'മലയാളം (Malayalam)' },
-  { code: 'mr', name: 'मराठी (Marathi)' },
-  { code: 'pa', name: 'ਪੰਜਾਬੀ (Punjabi)' },
-  { code: 'ta', name: 'தமிழ் (Tamil)' },
-  { code: 'te', name: 'తెలుగు (Telugu)' },
+  { code: 'hi', name: 'हिंदी' },
+  { code: 'bn', name: 'বাংলা' },
+  { code: 'gu', name: 'ગુજરાતી' },
+  { code: 'kn', name: 'ಕನ್ನಡ' },
+  { code: 'ml', name: 'മലയാളം' },
+  { code: 'mr', name: 'मराठी' },
+  { code: 'pa', name: 'ਪੰਜਾਬੀ' },
+  { code: 'ta', name: 'தமிழ்' },
+  { code: 'te', name: 'తెలుగు' },
 ];
 
-const recommendedQuestions = {
+const SAMPLE_QUESTIONS = {
   en: [
-    "What are my rights as a daily wage worker?",
-    "How can I file a complaint against my employer?",
-    "What documents do I need for legal action?",
-    "What is minimum wage in my state?",
-    "How to report workplace harassment?",
-    "What are my rights during layoffs?",
-    "How to claim unpaid wages?",
-    "What are my rights regarding working hours?",
-    "What government schemes are available for workers?",
-    "How to get legal aid for free?",
+    "What are minimum wage rates in India?",
+    "How many hours can I work per day legally?",
+    "What are my rights during termination?",
+    "How to file complaint against employer?",
+    "What benefits am I entitled to?"
   ],
   hi: [
-    "दैनिक मजदूरी कर्मचारी के रूप में मेरे क्या अधिकार हैं?",
-    "मैं अपने नियोक्ता के खिलाफ शिकायत कैसे दर्ज कर सकता हूं?",
-    "कानूनी कार्रवाई के लिए मुझे किन दस्तावेजों की आवश्यकता है?",
-    "मेरे राज्य में न्यूनतम मजदूरी क्या है?",
-    "कार्यस्थल पर उत्पीड़न की रिपोर्ट कैसे करें?",
-    "छंटनी के दौरान मेरे क्या अधिकार हैं?",
-    "अवैतनिक मजदूरी का दावा कैसे करें?",
-    "कार्य घंटों के संबंध में मेरे क्या अधिकार हैं?",
-    "श्रमिकों के लिए कौन सी सरकारी योजनाएं उपलब्ध हैं?",
-    "मुफ्त कानूनी सहायता कैसे प्राप्त करें?",
+    "भारत में न्यूनतम मजदूरी दर क्या है?",
+    "मैं कानूनी रूप से प्रति दिन कितने घंटे काम कर सकता हूं?",
+    "समाप्ति के दौरान मेरे अधिकार क्या हैं?",
+    "नियोक्ता के खिलाफ शिकायत कैसे दर्ज करें?",
+    "मैं किन लाभों का हकदार हूं?"
   ],
   bn: [
-    "দৈনিক মজুরি কর্মী হিসেবে আমার অধিকার কী?",
-    "আমি কিভাবে আমার নিয়োগকর্তার বিরুদ্ধে অভিযোগ দায়ের করতে পারি?",
-    "আইনি ব্যবস্থা নেওয়ার জন্য আমার কী কী কাগজপত্র প্রয়োজন?",
-    "আমার রাজ্যে ন্যূনতম মজুরি কত?",
-    "কর্মক্ষেত্রে হয়রানির রিপোর্ট কিভাবে করব?",
-    "ছাঁটাইয়ের সময় আমার অধিকার কী?",
-    "অবৈতনিক মজুরির দাবি কিভাবে করব?",
-    "কাজের সময়ের ক্ষেত্রে আমার অধিকার কী?",
-    "শ্রমিকদের জন্য কী কী সরকারি প্রকল্প আছে?",
-    "বিনামূল্যে আইনি সহায়তা কিভাবে পাব?",
+    "ভারতে ন্যূনতম মজুরির হার কত?",
+    "আমি আইনত প্রতিদিন কত ঘন্টা কাজ করতে পারি?",
+    "চাকরি ছাড়ার সময় আমার অধিকার কী?",
+    "নিয়োগকর্তার বিরুদ্ধে অভিযোগ কীভাবে দায়ের করব?",
+    "আমি কোন সুবিধাগুলির অধিকারী?"
   ],
   gu: [
-    "દૈનિક મજૂરી કામદાર તરીકે મારા અધિકારો શું છે?",
-    "હું મારા એમ્પ્લોયર સામે ફરિયાદ કેવી રીતે કરી શકું?",
-    "કાનૂની કાર્યવાહી માટે મને કયા દસ્તાવેજોની જરૂર છે?",
-    "મારા રાજ્યમાં લઘુત્તમ મજૂરી કેટલી છે?",
-    "વર્કપ્લેસ હેરાસમેન્ટની રિપોર્ટ કેવી રીતે કરવી?",
-    "લેઆફ દરમિયાન મારા અધિકારો શું છે?",
-    "બિનચૂકવેલા વેતનનો દાવો કેવી રીતે કરવો?",
-    "કામના કલાકો સંબંધિત મારા અધિકારો શું છે?",
-    "કામદારો માટે કઈ સરકારી યોજનાઓ ઉપલબ્ધ છે?",
-    "મફત કાનૂની સહાય કેવી રીતે મેળવવી?",
+    "ભારતમાં લઘુત્તમ વેતન દર શું છે?",
+    "હું કાયદેસર રોજ કેટલા કલાક કામ કરી શકું?",
+    "નોકરી છોડતી વખતે મારા અધિકારો શું છે?",
+    "નિયોજક સામે ફરિયાદ કેવી રીતે કરવી?",
+    "મને કયા લાભો મળવા જોઈએ?"
   ],
   kn: [
-    "ದೈನಂದಿನ ವೇತನ ಕೆಲಸಗಾರನಾಗಿ ನನ್ನ ಹಕ್ಕುಗಳು ಯಾವುವು?",
-    "ನನ್ನ ಉದ್ಯೋಗದಾತರ ವಿರುದ್ಧ ದೂರು ಹೇಗೆ ನೀಡಬಹುದು?",
-    "ಕಾನೂನು ಕ್ರಮಕ್ಕೆ ನನಗೆ ಯಾವ ದಾಖಲೆಗಳು ಬೇಕು?",
-    "ನನ್ನ ರಾಜ್ಯದಲ್ಲಿ ಕನಿಷ್ಠ ವೇತನ ಎಷ್ಟು?",
-    "ಕೆಲಸದ ಸ್ಥಳದಲ್ಲಿ ಕಿರುಕುಳದ ವರದಿ ಹೇಗೆ ಮಾಡುವುದು?",
-    "ಉದ್ಯೋಗ ಕಡಿತದ ಸಮಯದಲ್ಲಿ ನನ್ನ ಹಕ್ಕುಗಳು ಯಾವುವು?",
-    "ಬಾಕಿ ವೇತನದ ಹಕ್ಕು ಹೇಗೆ ಪಡೆಯುವುದು?",
-    "ಕೆಲಸದ ಗಂಟೆಗಳ ಬಗ್ಗೆ ನನ್ನ ಹಕ್ಕುಗಳು ಯಾವುವು?",
-    "ಕೆಲಸಗಾರರಿಗೆ ಯಾವ ಸರ್ಕಾರಿ ಯೋಜನೆಗಳು ಲಭ್ಯವಿವೆ?",
-    "ಉಚಿತ ಕಾನೂನು ಸಹಾಯ ಹೇಗೆ ಪಡೆಯುವುದು?",
+    "ಭಾರತದಲ್ಲಿ ಕನಿಷ್ಠ ವೇತನ ದರ ಎಷ್ಟು?",
+    "ನಾನು ಕಾನೂನುಬದ್ಧವಾಗಿ ದಿನಕ್ಕೆ ಎಷ್ಟು ಗಂಟೆಗಳ ಕೆಲಸ ಮಾಡಬಹುದು?",
+    "ಉದ್ಯೋಗ ಕೊನೆಗೊಳ್ಳುವಾಗ ನನ್ನ ಹಕ್ಕುಗಳು ಯಾವುವು?",
+    "ನೌಕರಿದಾರರ ವಿರುದ್ಧ ದೂರು ಹೇಗೆ ನೀಡುವುದು?",
+    "ನನಗೆ ಯಾವ ಪ್ರಯೋಜನಗಳು ಸಿಗಬೇಕು?"
   ],
   ml: [
-    "ദൈനംദിന കൂലി തൊഴിലാളിയായി എന്റെ അവകാശങ്ങൾ എന്തൊക്കെയാണ്?",
-    "എന്റെ ജോലിക്കാരനെതിരെ എങ്ങനെ പരാതി നൽകാം?",
-    "നിയമ നടപടിക്ക് എനിക്ക് എന്ത് രേഖകൾ വേണം?",
-    "എന്റെ സംസ്ഥാനത്ത് ഏറ്റവും കുറഞ്ഞ കൂലി എത്രയാണ്?",
-    "ജോലിസ്ഥലത്ത് ശല്യപ്പെടുത്തലിനെതിരെ എങ്ങനെ പരാതി നൽകാം?",
+    "ഇന്ത്യയിൽ ഏറ്റവും കുറഞ്ഞ വേതന നിരക്ക് എന്താണ്?",
+    "നിയമപരമായി എനിക്ക് ഒരു ദിവസം എത്ര മണിക്കൂർ ജോലി ചെയ്യാൻ കഴിയും?",
     "ജോലി നഷ്ടപ്പെടുമ്പോൾ എന്റെ അവകാശങ്ങൾ എന്തൊക്കെയാണ്?",
-    "ശമ്പളം വാങ്ങാത്തതിനെതിരെ എങ്ങനെ നടപടി എടുക്കാം?",
-    "ജോലി സമയങ്ങളെ സംബന്ധിച്ച് എന്റെ അവകാശങ്ങൾ എന്തൊക്കെയാണ്?",
-    "തൊഴിലാളരെ എന്ത് സർക്കാർ പദ്ധതികൾ ലഭ്യമാണ്?",
-    "സൗജന്യ നിയമ സഹായം എങ്ങനെ ലഭിക്കും?",
+    "ജോലിക്കാരനെതിരെ പരാതി എങ്ങനെ നൽകാം?",
+    "എനിക്ക് എന്തൊക്കെ ആനുകൂല്യങ്ങൾ ലഭിക്കണം?"
   ],
   mr: [
-    "दैनिक मजुरी कामगार म्हणून माझे अधिकार काय आहेत?",
-    "मी माझ्या नियोक्त्याविरुद्ध तक्रार कशी दाखल करू शकतो?",
-    "कायदेशीर कारवाईसाठी मला कोणत्या कागदपत्रांची आवश्यकता आहे?",
-    "माझ्या राज्यात किमान वेतन किती आहे?",
-    "कार्यस्थळावरील छळाची तक्रार कशी करावी?",
-    "कामातून काढून टाकण्याच्या वेळी माझे अधिकार काय आहेत?",
-    "न भरलेल्या वेतनाची मागणी कशी करावी?",
-    "कामाच्या तासांसंबंधी माझे अधिकार काय आहेत?",
-    "कामगारांसाठी कोणत्या सरकारी योजना उपलब्ध आहेत?",
-    "मोफत कायदेशीर मदत कशी मिळवावी?",
+    "भारतात किमान वेतन दर किती आहे?",
+    "मी कायदेशीररित्या दररोज किती तास काम करू शकतो?",
+    "नोकरी संपवताना माझे अधिकार काय आहेत?",
+    "नियोक्त्याविरुद्ध तक्रार कशी दाखल करावी?",
+    "मला कोणते फायदे मिळावेत?"
   ],
   pa: [
-    "ਰੋਜ਼ਾਨਾ ਮਜ਼ਦੂਰੀ ਕਰਮਚਾਰੀ ਵਜੋਂ ਮੇਰੇ ਅਧਿਕਾਰ ਕੀ ਹਨ?",
-    "ਮੈਂ ਆਪਣੇ ਨਿਯੁਕਤਕਰਤਾ ਦੇ ਖਿਲਾਫ਼ ਸ਼ਿਕਾਇਤ ਕਿਵੇਂ ਦਰਜ ਕਰ ਸਕਦਾ ਹਾਂ?",
-    "ਕਾਨੂੰਨੀ ਕਾਰਵਾਈ ਲਈ ਮੈਨੂੰ ਕਿਹੜੇ ਦਸਤਾਵੇਜ਼ਾਂ ਦੀ ਲੋੜ ਹੈ?",
-    "ਮੇਰੇ ਰਾਜ ਵਿੱਚ ਘੱਟੋ-ਘੱਟ ਮਜ਼ਦੂਰੀ ਕਿੰਨੀ ਹੈ?",
-    "ਕੰਮ ਦੀ ਥਾਂ ਤੇ ਪਰੇਸ਼ਾਨੀ ਦੀ ਰਿਪੋਰਟ ਕਿਵੇਂ ਕਰੀਏ?",
-    "ਕੰਮ ਤੋਂ ਹਟਾਉਣ ਦੇ ਸਮੇਂ ਮੇਰੇ ਅਧਿਕਾਰ ਕੀ ਹਨ?",
-    "ਬਿਨਾਂ ਭੁਗਤਾਨੀ ਮਜ਼ਦੂਰੀ ਦਾ ਦਾਅਵਾ ਕਿਵੇਂ ਕਰੀਏ?",
-    "ਕੰਮ ਦੇ ਘੰਟਿਆਂ ਬਾਰੇ ਮੇਰੇ ਅਧਿਕਾਰ ਕੀ ਹਨ?",
-    "ਕਰਮਚਾਰੀਆਂ ਲਈ ਕਿਹੜੀਆਂ ਸਰਕਾਰੀ ਯੋਜਨਾਵਾਂ ਉਪਲਬਧ ਹਨ?",
-    "ਮੁਫ਼ਤ ਕਾਨੂੰਨੀ ਸਹਾਇਤਾ ਕਿਵੇਂ ਪ੍ਰਾਪਤ ਕਰੀਏ?",
+    "ਭਾਰਤ ਵਿੱਚ ਘੱਟੋ-ਘੱਟ ਮਜ਼ਦੂਰੀ ਦਰ ਕੀ ਹੈ?",
+    "ਮੈਂ ਕਾਨੂੰਨੀ ਤੌਰ 'ਤੇ ਰੋਜ਼ਾਨਾ ਕਿੰਨੇ ਘੰਟੇ ਕੰਮ ਕਰ ਸਕਦਾ ਹਾਂ?",
+    "ਨੌਕਰੀ ਛੱਡਣ ਦੇ ਦੌਰਾਨ ਮੇਰੇ ਅਧਿਕਾਰ ਕੀ ਹਨ?",
+    "ਨਿਯੋਜਕ ਦੇ ਵਿਰੁੱਧ ਸ਼ਿਕਾਇਤ ਕਿਵੇਂ ਦਰਜ ਕਰੀਏ?",
+    "ਮੈਨੂੰ ਕਿਹੜੇ ਲਾਭ ਮਿਲਣੇ ਚਾਹੀਦੇ ਹਨ?"
   ],
   ta: [
-    "தினசரி கூலி தொழிலாளியாக எனது உரிமைகள் என்ன?",
-    "எனது முதலாளிக்கு எதிராக எப்படி புகார் செய்வது?",
-    "சட்ட நடவடிக்கைக்கு எனக்கு என்ன ஆவணங்கள் தேவை?",
-    "எனது மாநிலத்தில் குறைந்தபட்ச ஊதியம் எவ்வளவு?",
-    "பணியிட துன்புறுத்தலுக்கு எதிராக எப்படி புகார் செய்வது?",
-    "வேலையிலிருந்து நீக்கப்படும்போது எனது உரிமைகள் என்ன?",
-    "சம்பளம் செலுத்தப்படாததற்கு எதிராக எப்படி நடவடிக்கை எடுப்பது?",
-    "பணி நேரங்கள் தொடர்பான எனது உரிமைகள் என்ன?",
-    "தொழிலாளர்களுக்கு என்ன அரசு திட்டங்கள் கிடைக்கின்றன?",
-    "இலவச சட்ட உதவி எப்படி பெறுவது?",
+    "இந்தியாவில் குறைந்தபட்ச ஊதிய விகிதம் என்ன?",
+    "சட்டப்படி நான் ஒரு நாளைக்கு எத்தனை மணி நேரம் வேலை செய்ய முடியும்?",
+    "பணி நீக்கப்படும்போது எனது உரிமைகள் என்ன?",
+    "முதலாளிக்கு எதிராக புகார் எவ்வாறு செய்வது?",
+    "எனக்கு என்ன நன்மைகள் கிடைக்க வேண்டும்?"
   ],
   te: [
-    "రోజువారీ కూలి కార్మికుడిగా నా హక్కులు ఏమిటి?",
-    "నా యజమానిపై ఫిర్యాదు ఎలా చేయాలి?",
-    "చట్టపరమైన చర్యకు నాకు ఏ పత్రాలు అవసరం?",
-    "నా రాష్ట్రంలో కనీస వేతనం ఎంత?",
-    "పనిస్థలంలో హింసకు వ్యతిరేకంగా ఎలా ఫిర్యాదు చేయాలి?",
-    "ఉద్యోగం నుండి తొలగించబడినప్పుడు నా హక్కులు ఏమిటి?",
-    "చెల్లించని వేతనం కోసం ఎలా దావా వేయాలి?",
-    "పని గంటలకు సంబంధించిన నా హక్కులు ఏమిటి?",
-    "కార్మికులకు ఏ ప్రభుత్వ పథకాలు అందుబాటులో ఉన్నాయి?",
-    "ఉచిత చట్ట సహాయం ఎలా పొందాలి?",
+    "భారతదేశంలో కనీస వేతన రేటు ఎంత?",
+    "నేను చట్టపరంగా రోజుకు ఎన్ని గంటలు పని చేయవచ్చు?",
+    "ఉద్యోగం ముగిసినప్పుడు నా హక్కులు ఏమిటి?",
+    "యజమానిపై ఫిర్యాదు ఎలా చేయాలి?",
+    "నాకు ఏ ప్రయోజనాలు లభించాలి?"
   ]
 };
 
+// OpenAI API Key Manager - Client-side version
+class OpenAIManager {
+  private baseUrl: string;
+
+  constructor() {
+    this.baseUrl = '/api/chat';
+  }
+
+  async createCompletion(messages: any[], options: any = {}): Promise<any> {
+    const response = await fetch(this.baseUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        messages,
+        ...options,
+      }),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(errorData.error || 'Failed to get response');
+    }
+
+    return response.json();
+  }
+
+  hasApiKeys(): boolean {
+    return true; // We'll let the server handle API key validation
+  }
+
+  getApiKeyCount(): number {
+    return 1; // We'll let the server handle API key count
+  }
+}
+
 export default function ChatBot() {
   const [isOpen, setIsOpen] = useState(false);
-  const [isAudioEnabled, setIsAudioEnabled] = useState(true);
+  const [isAudioEnabled, setIsAudioEnabled] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
-  const [selectedLanguage, setSelectedLanguage] = useState<string | null>(null);
+  const [selectedLanguage, setSelectedLanguage] = useState<string>('en');
+  const [apiError, setApiError] = useState<string>('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const speechSynthesis = typeof window !== 'undefined' ? window.speechSynthesis : null;
-  const currentUtterance = useRef<SpeechSynthesisUtterance | null>(null);
+
+  // Initialize OpenAI Manager
+  const openaiManager = useRef(new OpenAIManager());
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -169,59 +157,73 @@ export default function ChatBot() {
     scrollToBottom();
   }, [messages]);
 
-  // Cleanup speech synthesis on unmount
   useEffect(() => {
-    return () => {
-      if (speechSynthesis) {
-        speechSynthesis.cancel();
-      }
-    };
-  }, [speechSynthesis]);
+    // Check if API keys are available
+    if (!openaiManager.current.hasApiKeys()) {
+      setApiError('No API keys configured. Please check your environment variables.');
+    }
+  }, []);
 
   const speakText = (text: string) => {
-    if (!isAudioEnabled || !speechSynthesis || !selectedLanguage) return;
-
-    // Cancel any ongoing speech
-    speechSynthesis.cancel();
-
+    if (!isAudioEnabled || !window.speechSynthesis) return;
+    
+    window.speechSynthesis.cancel();
     const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = `${selectedLanguage}-IN`;
+    
+    // Map language codes to proper BCP 47 language tags
+    const languageMap: { [key: string]: string } = {
+      'en': 'en-IN',
+      'hi': 'hi-IN',
+      'bn': 'bn-IN',
+      'gu': 'gu-IN',
+      'kn': 'kn-IN',
+      'ml': 'ml-IN',
+      'mr': 'mr-IN',
+      'pa': 'pa-IN',
+      'ta': 'ta-IN',
+      'te': 'te-IN'
+    };
+
+    utterance.lang = languageMap[selectedLanguage] || 'en-IN';
     utterance.rate = 0.9;
-    utterance.pitch = 1;
-    utterance.volume = 1;
+    
+    // Try to find a voice for the selected language
+    const voices = window.speechSynthesis.getVoices();
+    const voice = voices.find(v => v.lang.startsWith(selectedLanguage)) || 
+                 voices.find(v => v.lang.startsWith('en')) || 
+                 voices[0];
+    
+    if (voice) {
+      utterance.voice = voice;
+    }
 
-    // Store the current utterance
-    currentUtterance.current = utterance;
-
-    // Add event listeners
-    utterance.onend = () => {
-      currentUtterance.current = null;
-    };
-
-    utterance.onerror = (event) => {
-      console.error('Speech synthesis error:', event);
-      currentUtterance.current = null;
-    };
-
-    speechSynthesis.speak(utterance);
+    window.speechSynthesis.speak(utterance);
   };
 
-  const toggleAudio = () => {
-    if (isAudioEnabled && speechSynthesis) {
-      speechSynthesis.cancel();
-    }
-    setIsAudioEnabled(!isAudioEnabled);
+  const getLanguageName = (code: string): string => {
+    const languages = {
+      'hi': 'Hindi',
+      'bn': 'Bengali',
+      'gu': 'Gujarati',
+      'kn': 'Kannada',
+      'ml': 'Malayalam',
+      'mr': 'Marathi',
+      'pa': 'Punjabi',
+      'ta': 'Tamil',
+      'te': 'Telugu'
+    };
+    return languages[code as keyof typeof languages] || 'English';
   };
 
   const handleSend = async () => {
-    if (!input.trim() || isLoading || !selectedLanguage) return;
+    if (!input.trim() || isLoading) return;
     
     const userMessage = input.trim();
     setInput('');
+    setApiError('');
     
-    const messageId = Date.now().toString();
     const userMsg: Message = {
-      id: messageId + '_user',
+      id: Date.now() + '_user',
       text: userMessage,
       isUser: true,
       timestamp: new Date(),
@@ -233,12 +235,10 @@ export default function ChatBot() {
     try {
       const response = await fetch('/api/chat', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ 
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
           message: userMessage,
-          language: selectedLanguage 
+          language: selectedLanguage
         }),
       });
 
@@ -249,110 +249,64 @@ export default function ChatBot() {
       }
 
       const botMsg: Message = {
-        id: messageId + '_bot',
+        id: Date.now() + '_bot',
         text: data.response,
         isUser: false,
-        timestamp: new Date(data.timestamp),
+        timestamp: new Date(),
       };
       
       setMessages(prev => [...prev, botMsg]);
       
-      // Only speak if audio is enabled
       if (isAudioEnabled) {
         speakText(data.response);
       }
     } catch (error) {
-      console.error('Error sending message:', error);
-      const errorMsg: Message = {
-        id: messageId + '_error',
-        text: "I apologize, but I'm having trouble connecting right now. Please try again later.",
+      console.error('Error:', error);
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+      
+      setApiError(errorMessage);
+      setMessages(prev => [...prev, {
+        id: Date.now() + '_error',
+        text: "I'm having trouble connecting to the AI service. Please try again later.",
         isUser: false,
         timestamp: new Date(),
-        error: true,
-      };
-      setMessages(prev => [...prev, errorMsg]);
+      }]);
     } finally {
       setIsLoading(false);
     }
   };
 
-  const handleQuestionClick = (question: string) => {
-    setInput(question);
-  };
-
-  const handleLanguageSelect = (langCode: string) => {
-    setSelectedLanguage(langCode);
-    setMessages([]); // Clear messages when language changes
-  };
-
-  const renderLanguageSelector = () => (
-    <div className="p-4 space-y-4">
-      <div className="flex items-center gap-2 text-[#304674] mb-4">
-        <Globe className="h-5 w-5" />
-        <h3 className="font-semibold">Select Language</h3>
-      </div>
-      <div className="grid grid-cols-2 gap-2">
-        {SUPPORTED_LANGUAGES.map((lang) => (
-          <Button
-            key={lang.code}
-            variant="outline"
-            className={cn(
-              "justify-start text-left h-auto py-2 px-3 text-sm",
-              selectedLanguage === lang.code
-                ? "bg-[#304674] text-white hover:bg-[#1d2c3a] hover:text-white"
-                : "hover:bg-[#c6d3e3] hover:text-[#304674]"
-            )}
-            onClick={() => handleLanguageSelect(lang.code)}
-          >
-            {lang.name}
-          </Button>
-        ))}
-      </div>
-    </div>
-  );
+  const currentQuestions = SAMPLE_QUESTIONS[selectedLanguage as keyof typeof SAMPLE_QUESTIONS] || SAMPLE_QUESTIONS.en;
 
   return (
     <div className="fixed bottom-4 right-4 z-50">
       {!isOpen ? (
         <Button
           onClick={() => setIsOpen(true)}
-          className="h-14 w-14 rounded-full bg-[#304674] hover:bg-[#1d2c3a] text-white shadow-lg"
+          className="h-14 w-14 rounded-full bg-blue-600 hover:bg-blue-700 text-white shadow-lg"
         >
           <MessageSquare className="h-6 w-6" />
         </Button>
       ) : (
         <Card className="w-[350px] md:w-[400px] h-[600px] bg-white shadow-xl rounded-xl flex flex-col">
           {/* Header */}
-          <div className="p-4 border-b flex items-center justify-between bg-[#304674] text-white rounded-t-xl">
+          <div className="p-4 border-b flex items-center justify-between bg-blue-600 text-white rounded-t-xl">
             <div className="flex items-center gap-2">
               <MessageSquare className="h-5 w-5" />
-              <h3 className="font-semibold">Legal Saathi Assistant</h3>
+              <h3 className="font-semibold">Legal Assistant</h3>
+              <span className="text-xs bg-blue-500 px-2 py-1 rounded">
+                {openaiManager.current.getApiKeyCount()} Keys
+              </span>
             </div>
             <div className="flex items-center gap-2">
               <Button
                 variant="ghost"
                 size="icon"
                 className="h-8 w-8 text-white hover:bg-white/10"
-                onClick={toggleAudio}
-                title={isAudioEnabled ? "Mute" : "Unmute"}
+                onClick={() => setIsAudioEnabled(!isAudioEnabled)}
               >
-                {isAudioEnabled ? (
-                  <Volume2 className="h-4 w-4" />
-                ) : (
-                  <VolumeX className="h-4 w-4" />
-                )}
+                {isAudioEnabled ? <Volume2 className="h-4 w-4" /> : <VolumeX className="h-4 w-4" />}
               </Button>
-              {selectedLanguage && (
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="h-8 w-8 text-white hover:bg-white/10"
-                  onClick={() => setSelectedLanguage(null)}
-                  title="Change Language"
-                >
-                  <Globe className="h-4 w-4" />
-                </Button>
-              )}
               <Button
                 variant="ghost"
                 size="icon"
@@ -364,108 +318,120 @@ export default function ChatBot() {
             </div>
           </div>
 
-          {/* Content */}
-          <div className="flex-1 overflow-y-auto">
-            {!selectedLanguage ? (
-              renderLanguageSelector()
-            ) : (
-              <div className="p-4 space-y-4">
-                {messages.length === 0 ? (
-                  <div className="space-y-4">
-                    <p className="text-sm text-gray-500 text-center">
-                      Ask me anything about your legal rights as a daily wage worker
-                    </p>
-                    <div className="grid grid-cols-1 gap-2">
-                      {(recommendedQuestions[selectedLanguage as keyof typeof recommendedQuestions] || recommendedQuestions.en).map((question, index) => (
-                        <Button
-                          key={index}
-                          variant="outline"
-                          className="justify-start text-left h-auto py-2 px-3 text-sm hover:bg-[#c6d3e3] hover:text-[#304674]"
-                          onClick={() => handleQuestionClick(question)}
-                        >
-                          {question}
-                        </Button>
-                      ))}
-                    </div>
-                  </div>
-                ) : (
-                  messages.map((message) => (
-                    <div
-                      key={message.id}
-                      className={cn(
-                        "flex",
-                        message.isUser ? "justify-end" : "justify-start"
-                      )}
-                    >
-                      <div
-                        className={cn(
-                          "max-w-[80%] rounded-lg p-3",
-                          message.isUser
-                            ? "bg-[#304674] text-white"
-                            : message.error
-                            ? "bg-red-50 border border-red-200 text-red-800"
-                            : "bg-[#c6d3e3] text-[#304674]"
-                        )}
-                      >
-                        {message.error && (
-                          <div className="flex items-center gap-1 mb-1">
-                            <AlertCircle className="h-4 w-4" />
-                            <span className="text-xs font-medium">Error</span>
-                          </div>
-                        )}
-                        <div className="flex items-start gap-2">
-                          <p className="text-sm whitespace-pre-wrap flex-1">{message.text}</p>
-                          {!message.isUser && !message.error && (
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              className="h-6 w-6 text-[#304674] hover:bg-[#304674] hover:text-white"
-                              onClick={() => speakText(message.text)}
-                              title="Listen again"
-                            >
-                              <Volume2 className="h-3 w-3" />
-                            </Button>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                  ))
-                )}
-                {isLoading && (
-                  <div className="flex justify-start">
-                    <div className="bg-[#c6d3e3] text-[#304674] rounded-lg p-3">
-                      <Loader2 className="h-4 w-4 animate-spin" />
-                    </div>
-                  </div>
-                )}
-                <div ref={messagesEndRef} />
-              </div>
-            )}
-          </div>
-
-          {/* Input */}
-          {selectedLanguage && (
-            <div className="p-4 border-t">
-              <div className="flex gap-2">
-                <input
-                  type="text"
-                  value={input}
-                  onChange={(e) => setInput(e.target.value)}
-                  onKeyPress={(e) => e.key === 'Enter' && handleSend()}
-                  placeholder="Type your question..."
-                  className="flex-1 px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#98bad5] text-sm"
-                  disabled={isLoading}
-                />
-                <Button
-                  onClick={handleSend}
-                  disabled={isLoading || !input.trim()}
-                  className="bg-[#304674] hover:bg-[#1d2c3a] text-white"
-                >
-                  <Send className="h-4 w-4" />
-                </Button>
+          {/* API Error Alert */}
+          {apiError && (
+            <div className="p-3 bg-red-50 border-b border-red-200">
+              <div className="flex items-center gap-2 text-red-700">
+                <AlertCircle className="h-4 w-4" />
+                <span className="text-sm">{apiError}</span>
               </div>
             </div>
           )}
+
+          {/* Language Selector */}
+          <div className="p-3 border-b bg-gray-50">
+            <div className="flex items-center gap-2 mb-2">
+              <Globe className="h-4 w-4 text-gray-600" />
+              <span className="text-sm font-medium text-gray-700">Language</span>
+            </div>
+            <select
+              value={selectedLanguage}
+              onChange={(e) => setSelectedLanguage(e.target.value)}
+              className="w-full p-2 border rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              {LANGUAGES.map((lang) => (
+                <option key={lang.code} value={lang.code}>
+                  {lang.name}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* Messages */}
+          <div className="flex-1 overflow-y-auto p-4 space-y-4">
+            {messages.length === 0 ? (
+              <div className="space-y-3">
+                <p className="text-sm text-gray-600 text-center">
+                  Ask me about your legal rights as a worker in India
+                </p>
+                <div className="space-y-2">
+                  {currentQuestions.map((question, index) => (
+                    <Button
+                      key={index}
+                      variant="outline"
+                      className="w-full text-left text-sm h-auto py-2 px-3 justify-start"
+                      onClick={() => setInput(question)}
+                    >
+                      {question}
+                    </Button>
+                  ))}
+                </div>
+              </div>
+            ) : (
+              messages.map((message) => (
+                <div
+                  key={message.id}
+                  className={cn(
+                    "flex",
+                    message.isUser ? "justify-end" : "justify-start"
+                  )}
+                >
+                  <div
+                    className={cn(
+                      "max-w-[80%] rounded-lg p-3 text-sm",
+                      message.isUser
+                        ? "bg-blue-600 text-white"
+                        : "bg-gray-100 text-gray-800"
+                    )}
+                  >
+                    <div className="flex items-start gap-2">
+                      <p className="whitespace-pre-wrap flex-1">{message.text}</p>
+                      {!message.isUser && (
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-6 w-6 opacity-70 hover:opacity-100"
+                          onClick={() => speakText(message.text)}
+                        >
+                          <Volume2 className="h-3 w-3" />
+                        </Button>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              ))
+            )}
+            {isLoading && (
+              <div className="flex justify-start">
+                <div className="bg-gray-100 rounded-lg p-3">
+                  <Loader2 className="h-4 w-4 animate-spin text-gray-600" />
+                </div>
+              </div>
+            )}
+            <div ref={messagesEndRef} />
+          </div>
+
+          {/* Input */}
+          <div className="p-4 border-t">
+            <div className="flex gap-2">
+              <input
+                type="text"
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                onKeyPress={(e) => e.key === 'Enter' && handleSend()}
+                placeholder="Type your question..."
+                className="flex-1 px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                disabled={isLoading || !openaiManager.current.hasApiKeys()}
+              />
+              <Button
+                onClick={handleSend}
+                disabled={isLoading || !input.trim() || !openaiManager.current.hasApiKeys()}
+                className="bg-blue-600 hover:bg-blue-700 text-white"
+              >
+                <Send className="h-4 w-4" />
+              </Button>
+            </div>
+          </div>
         </Card>
       )}
     </div>

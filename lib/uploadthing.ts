@@ -36,7 +36,7 @@ export const ourFileRouter = {
       return { uploadedBy: metadata.userId, url: file.url }
     }),
 
-  audioUploader: f({ audio: { maxFileSize: "16MB", maxFileCount: 1 } })
+  audioUploader: f({ audio: { maxFileSize: "32MB", maxFileCount: 1 } })
     .middleware(async () => {
       const { userId } = await auth()
       if (!userId) throw new Error("Unauthorized")

@@ -1,39 +1,25 @@
-
 import { prisma } from "@/lib/db"
-import AdminDashboardClient from "./AdminDashboardClient"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { FileText, Users, Info } from "lucide-react";
-
-async function getLanguages() {
-  return await prisma.language.findMany({
-    orderBy: { name: "asc" },
-  })
-}
-
-async function getCategories() {
-  return await prisma.category.findMany({
-    orderBy: { id: "asc" },
-  })
-}
-
-async function getRights() {
-  return await prisma.right.findMany({
-    include: { category: true, language: true },
-    orderBy: { createdAt: "desc" },
-  })
-}
+import { FileText, Users, Info, Languages, Tag } from "lucide-react";
 
 export default async function DashboardPage() {
-  const [rightsCount, teamCount, volunteerCount] = await Promise.all([
+  const [rightsCount, teamCount, volunteerCount, languagesCount, categoriesCount] = await Promise.all([
     prisma.right.count(),
     prisma.teamMember.count(),
     prisma.volunteer.count(),
+    prisma.language.count(),
+    prisma.category.count()
   ]);
 
   return (
     <div className="space-y-8">
-      <h2 className="text-3xl font-bold tracking-tight">Dashboard</h2>
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+      <div>
+        <h2 className="text-3xl font-bold tracking-tight">Dashboard</h2>
+        <p className="text-muted-foreground">
+          Overview of your application's content and resources
+        </p>
+      </div>
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Total Rights</CardTitle>
@@ -59,6 +45,24 @@ export default async function DashboardPage() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{volunteerCount}</div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Languages</CardTitle>
+            <Languages className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{languagesCount}</div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Categories</CardTitle>
+            <Tag className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{categoriesCount}</div>
           </CardContent>
         </Card>
       </div>

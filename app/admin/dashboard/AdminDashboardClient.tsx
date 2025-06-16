@@ -8,9 +8,7 @@ import {
   LayoutDashboard,
   Users,
   Languages,
-  Settings,
   Info,
-  ArrowLeft,
   LogOut
 } from "lucide-react"
 import { useClerk } from "@clerk/nextjs"
@@ -45,17 +43,11 @@ const routes = [
     icon: Info,
     href: "/admin/dashboard/about",
     color: "text-emerald-500"
-  },
-  {
-    label: "Settings",
-    icon: Settings,
-    href: "/admin/dashboard/settings",
-    color: "text-gray-500"
   }
 ]
 
 interface AdminDashboardClientProps {
-  onClose?: () => void;
+  onClose?: () => void
 }
 
 export default function AdminDashboardClient({ onClose }: AdminDashboardClientProps) {
@@ -63,48 +55,53 @@ export default function AdminDashboardClient({ onClose }: AdminDashboardClientPr
   const { signOut } = useClerk()
 
   const handleNavigation = (href: string) => {
-    if (onClose) {
-      onClose()
-    }
+    if (onClose) onClose()
   }
 
   return (
-    <div className="flex flex-col h-full bg-background border-r">
-      <div className="flex items-center h-16 flex-shrink-0 px-4 border-b">
-        <Link href="/admin/dashboard" className="font-bold text-xl">
-          Admin
+    <div className="flex flex-col h-full bg-white border-r border-gray-200">
+      {/* Header */}
+      <div className="flex items-center h-16 px-6 border-b border-gray-200 bg-gray-50">
+        <Link href="/admin/dashboard" className="text-xl font-semibold text-gray-800">
+          Admin Panel
         </Link>
       </div>
-      <nav className="flex-1 p-4 space-y-1">
-        {routes.map((route) => (
-          <Link
-            key={route.href}
-            href={route.href}
-            onClick={() => handleNavigation(route.href)}
-            className={cn(
-              "flex items-center px-3 py-2 text-sm font-medium rounded-md",
-              pathname === route.href
-                ? "bg-primary text-primary-foreground"
-                : "text-muted-foreground hover:bg-muted hover:text-foreground"
-            )}
-          >
-            <div className="flex items-center flex-1">
+
+      {/* Navigation */}
+      <nav className="flex-1 overflow-y-auto px-4 py-6 space-y-2">
+        {routes.map((route) => {
+          const isActive = pathname === route.href
+
+          return (
+            <Link
+              key={route.href}
+              href={route.href}
+              onClick={() => handleNavigation(route.href)}
+              className={cn(
+                "flex items-center px-4 py-2 rounded-md transition-colors duration-150",
+                isActive
+                  ? "bg-gray-900 text-white"
+                  : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
+              )}
+            >
               <route.icon className={cn("h-5 w-5 mr-3", route.color)} />
-              {route.label}
-            </div>
-          </Link>
-        ))}
+              <span className="font-medium">{route.label}</span>
+            </Link>
+          )
+        })}
       </nav>
-      <div className="p-4 border-t">
+
+      {/* Sign Out */}
+      <div className="border-t border-gray-200 p-4 bg-gray-50">
         <Button
           variant="ghost"
-          className="w-full justify-start text-muted-foreground hover:text-foreground"
+          className="w-full justify-start text-gray-600 hover:text-black"
           onClick={() => signOut()}
         >
-          <LogOut className="mr-2 h-4 w-4" />
+          <LogOut className="mr-2 h-5 w-5" />
           Sign Out
         </Button>
       </div>
     </div>
   )
-} 
+}

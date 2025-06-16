@@ -1,156 +1,69 @@
-import { prisma } from "@/lib/db"
-import Link from "next/link"
-import { notFound } from "next/navigation"
-import AudioPlayerWrapper from "@/components/AudioPlayerWrapper"
-import { ChevronLeft } from "lucide-react"
-import { getSiteTranslations, t } from "@/lib/translations"
+import { prisma } from "@/lib/db";
+import { notFound } from "next/navigation";
+import { getSiteTranslations, t } from "@/lib/translations";
+import Navbar from "@/components/Navbar";
 
-interface PageProps {
-  params: {
-    lang: string;
-    category: string;
-  };
+interface Props {
+  params: { lang: string; category: string };
   searchParams?: { [key: string]: string | string[] | undefined };
 }
 
-async function getLanguage(code: string) {
-  return await prisma.language.findUnique({
-    where: {
-      code: code,
-    },
-  })
-}
+export default async function CategoryPage({ params, searchParams }: Props) {
+  const { lang: langCode, category: categoryKey } = params;
 
-async function getCategory(key: string, languageCode: string) {
-  return await prisma.category.findUnique({
-    where: {
-      key: key,
-    },
+  const language = await prisma.language.findUnique({
+    where: { code: langCode },
+  });
+
+  if (!language) return notFound();
+
+  const category = await prisma.category.findFirst({
+    where: { key: categoryKey },
     include: {
       translations: {
-        where: {
-          languageCode: languageCode,
-        },
+        where: { languageCode: langCode },
       },
     },
-  })
-}
+  });
 
-async function getRights(categoryKey: string, languageCode: string) {
-  return await prisma.right.findMany({
-    where: {
-      category: {
-        key: categoryKey,
-      },
-      languageCode: languageCode,
-      isActive: true,
-    },
-    include: {
-      category: true,
-      language: true,
-    },
-    orderBy: {
-      createdAt: "asc",
-    },
-  })
-}
+  if (!category) return notFound();
 
-export default async function CategoryPage({ params, searchParams }: PageProps) {
-  const langCode = params.lang
-  const categoryKey = params.category
+  const translations = await getSiteTranslations(langCode);
 
-  const language = await getLanguage(langCode)
-  if (!language) {
-    notFound()
-  }
-
-  const category = await getCategory(categoryKey, langCode)
-  if (!category) {
-    notFound()
-  }
-
-  const rights = await getRights(categoryKey, langCode)
-
-  {rights.map((right) => {
-  console.log("Audio URL:", right.audioUrl);
   return (
-    <div key={right.id} className="rights-card ...">
-      {/* rest of code */}
-      {right.audioUrl && <AudioPlayerWrapper  src={right.audioUrl} />}
+    <div className="min-h-screen flex flex-col bg-[#d8e1e8] text-[#304674]">
+      <Navbar 
+        langCode={langCode}
+        translations={translations}
+        title={category.translations[0]?.name || category.key}
+        backUrl={`/${langCode}`}
+      />
+
+      <main className="flex-grow p-6 md:p-10">
+        <div className="max-w-4xl mx-auto">
+          <h1 className="text-2xl md:text-3xl font-bold text-center mb-8">
+            {category.translations[0]?.name || category.key}
+          </h1>
+          
+          {/* Add your category content here */}
+        </div>
+      </main>
+
+      {/* Footer */}
+      <footer className="bg-[#304674] text-white py-4 text-center">
+        <p className="text-sm">
+          {t(
+            translations,
+            "site.footer",
+            "Made with ❤️ for daily wage workers across India"
+          )}
+        </p>
+      </footer>
+
+      {/* Language Footer */}
+      <div className="bg-[#c6d3e3] py-4 text-center text-[#304674] text-sm font-medium">
+        Legal Saathi • {language.name} • {new Date().getFullYear()}
+      </div>
     </div>
   );
-})}
-
-const translations = await getSiteTranslations(langCode)
-
-  return (
-  <div className="min-h-screen bg-[#d8e1e8] text-[#304674]">
-      {/* Header */}
-      <div className="mobile-header bg-gradient-to-r from-[#304674] to-[#98bad5] text-white p-4 sticky top-0 z-10 shadow-md">
-        <div className="flex items-center justify-between max-w-4xl mx-auto">
-          <Link
-            href={`/${langCode}`}
-            className="flex items-center text-white hover:text-[#c6d3e3] transition-colors"
-          >
-            <ChevronLeft className="h-5 w-5 mr-1" />
-            <span>Back</span>
-          </Link>
-          <div className="text-center">
-            <h1 className="text-lg font-bold flex items-center gap-2">
-              <span>{category.icon}</span>
-              {category.translations[0]?.name || category.key}
-            </h1>
-          </div>
-          <div className="w-20" />
-        </div>
-      </div>
-
-      {/* Rights List */}
-      <div className="p-4 md:p-6 mobile-footer-padding">
-        {rights.length === 0 ? (
-          <div className="text-center py-12">
-            <p className="text-[#304674] text-opacity-70">
-              {t(translations, 'no.info', 'No information available in this category yet.')}
-            </p>
-          </div>
-        ) : (
-          <div className="space-y-6 max-w-4xl mx-auto">
-            {rights.map((right) => (
-              <div
-                key={right.id}
-                className="rights-card bg-[#fefefe] border border-[#b2cbde] rounded-xl p-6 shadow-sm"
-              >
-                <h3 className="text-lg font-semibold text-[#304674] mb-4">
-                  {right.title}
-                </h3>
-
-                {right.audioUrl && (
-                  <div className="mb-4">
-                    <AudioPlayerWrapper src={right.audioUrl} />
-                  </div>
-                )}
-
-                <div className="text-[#304674] text-base leading-relaxed">
-                  {right.script}
-                </div>
-
-                {right.learnMoreUrl && (
-                  <div className="mt-4">
-                    <a
-                      href={right.learnMoreUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center px-4 py-2 bg-[#98bad5] text-white rounded-lg hover:bg-[#c6d3e3] transition-colors"
-                    >
-                      {langCode === "hi" ? "और जानें" : "Learn More"} →
-                    </a>
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
-    </div>
-  )
 }

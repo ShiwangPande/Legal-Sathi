@@ -170,3 +170,9 @@
     padding-bottom: 5rem;
   }
 }
+
+@layer utilities {
+  .animate-bounce-slow {
+    animation: bounce 2s infinite;
+  }
+}

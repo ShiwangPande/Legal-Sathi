@@ -167,24 +167,24 @@ export default function AboutPage() {
       {/* Main Content */}
       <main className="container mx-auto px-2 md:px-4 py-6 md:py-12">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="max-w-6xl mx-auto  ">
-        <TabsList className="flex flex-row w-full mb-6 md:mb-10 bg-[#c6d3e3] p-2 md:p-2.5 rounded-xl gap-2 md:gap-2.5 shadow-md">
-  {[
-    { value: "founders", label: "Founders", Icon: Users },
-    { value: "team", label: "Team", Icon: Users },
-    { value: "acknowledgements", label: "Acknowledgements", Icon: Award },
-  ].map(({ value, label, Icon }) => (
-    <TabsTrigger
-      key={value}
-      value={value}
-      className="flex-1 text-base md:text-lg py-3.5 md:py-4 rounded-lg bg-transparent hover:bg-[#aabbd1] hover:text-[#1d2d47] data-[state=active]:bg-[#304674] data-[state=active]:text-white transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-[#98bad5] font-medium touch-manipulation active:scale-[0.98]"
-    >
-      <div className="flex items-center justify-center gap-2 md:gap-2.5">
-        <Icon className="h-4 w-4 md:h-5 md:w-5" />
-        <span className="text-sm md:text-base">{label}</span>
-      </div>
-    </TabsTrigger>
-  ))}
-</TabsList>
+        <TabsList className="flex flex-row w-full mb-4 md:mb-8 bg-[#c6d3e3] p-1.5 md:p-2.5 rounded-xl gap-1.5 md:gap-2.5 shadow-md">
+          {[
+            { value: "founders", label: "Founders", Icon: Users },
+            { value: "team", label: "Team", Icon: Users },
+            { value: "acknowledgements", label: "Acknowledgements", Icon: Award },
+          ].map(({ value, label, Icon }) => (
+            <TabsTrigger
+              key={value}
+              value={value}
+              className="flex-1 text-sm md:text-base py-2.5 md:py-4 rounded-lg bg-transparent hover:bg-[#aabbd1] hover:text-[#1d2d47] data-[state=active]:bg-[#304674] data-[state=active]:text-white transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-[#98bad5] font-medium touch-manipulation active:scale-[0.98]"
+            >
+              <div className="flex items-center justify-center gap-1.5 md:gap-2.5">
+                <Icon className="h-3.5 w-3.5 md:h-5 md:w-5" />
+                <span className="text-xs md:text-base whitespace-nowrap">{label}</span>
+              </div>
+            </TabsTrigger>
+          ))}
+        </TabsList>
 
 
           {/* Founders Tab */}
