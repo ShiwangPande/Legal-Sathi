@@ -3,7 +3,6 @@ import "./globals.css"
 import type { Metadata } from "next"
 import { Inter } from "next/font/google"
 import { ClerkProvider } from "@clerk/nextjs"
-import { ThemeProvider } from "@/components/theme-provider"
 import { Providers } from "./providers"
 import ChatBot from "@/components/ChatBot"
 
@@ -12,7 +11,7 @@ const inter = Inter({ subsets: ["latin"] })
 export const metadata: Metadata = {
   title: "Legal Saathi",
   description: "Empowering daily wage workers with legal knowledge",
-  manifest: "/site.webmanifest", // make consistent with link tag below
+  manifest: "/site.webmanifest",
   themeColor: "#98bad5",
   viewport: "width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
 }
@@ -24,7 +23,7 @@ export default function RootLayout({
 }) {
   return (
     <ClerkProvider>
-      <html lang="en" suppressHydrationWarning>
+      <html lang="en">
         <head>
           <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
           <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
@@ -34,17 +33,10 @@ export default function RootLayout({
           <link rel="manifest" href="/site.webmanifest" />
         </head>
         <body className={`${inter.className} bg-[#d8e1e8] text-[#304674]`}>
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-          >
-            <Providers>
-              {children}
-              <ChatBot />
-            </Providers>
-          </ThemeProvider>
+          <Providers>
+            {children}
+            <ChatBot />
+          </Providers>
         </body>
       </html>
     </ClerkProvider>
