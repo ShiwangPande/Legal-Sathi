@@ -33,7 +33,6 @@ export default function Navbar({
       icon: "👋",
       label: t(translations, "site.about.title", "About Us"),
       variant: "ghost" as const,
-      className: "bg-white/10 hover:bg-white/20",
     },
     {
       href: "/",
@@ -54,14 +53,14 @@ export default function Navbar({
       className={`bg-[#304674] text-white shadow-md sticky top-0 z-50 ${className}`}
       role="banner"
     >
-      <div className="mx-auto px-5 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16 relative">
+      <div className="mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex flex-wrap items-center justify-between gap-2 py-2 sm:h-16 relative">
           {/* Left - Back Button */}
-          <div className="flex items-center flex-1 min-w-0">
+          <div className="flex items-center min-w-0">
             {showBack ? (
               <Link
                 href={backUrl}
-                className="inline-flex items-center gap-2 text-white hover:text-[#c6d3e3] focus:outline-none focus:ring-2 focus:ring-white/50 px-2 py-1 rounded-md transition-all"
+                className="inline-flex items-center gap-2 text-white hover:text-[#c6d3e3] focus:outline-none focus:ring-2 focus:ring-white/50 px-2 py-1 rounded-md transition-all text-sm sm:text-base"
               >
                 <ChevronLeft className="w-5 h-5" />
                 <span className="hidden sm:inline font-medium">
@@ -75,21 +74,21 @@ export default function Navbar({
 
           {/* Center - Title */}
           {title && (
-            <div className="absolute inset-0 flex justify-center items-center pointer-events-none">
-              <h1 className="text-lg sm:text-xl lg:text-2xl font-semibold text-white truncate">
+            <div className="absolute inset-0 flex justify-center items-center pointer-events-none px-10">
+              <h1 className="text-base sm:text-lg lg:text-2xl font-semibold text-white truncate max-w-full text-center">
                 {title}
               </h1>
             </div>
           )}
 
           {/* Right - Desktop Nav */}
-          <div className="hidden md:flex items-center justify-end space-x-4 flex-1">
-            {navLinks.map(({ href, icon: Icon, label, variant, className: linkClassName }, idx) =>
+          <div className="hidden md:flex flex-wrap items-center justify-end gap-2 flex-1 min-w-0">
+            {navLinks.map(({ href, icon: Icon, label, variant }, idx) =>
               variant === "primary" ? (
                 <Link
                   key={idx}
                   href={href}
-                  className="bg-white text-[#304674] font-semibold px-4 py-2 rounded-md hover:bg-[#c6d3e3] transition"
+                  className="bg-white text-[#304674] font-semibold px-4 py-2 rounded-md hover:bg-[#c6d3e3] transition text-sm"
                 >
                   {label}
                 </Link>
@@ -97,14 +96,14 @@ export default function Navbar({
                 <Link
                   key={idx}
                   href={href}
-                  className={`inline-flex items-center text-white hover:text-[#c6d3e3] px-3 py-2 rounded-md transition-all ${linkClassName || ''}`}
+                  className="flex items-center gap-1 px-3 py-2 rounded-md text-sm font-medium text-white hover:text-[#c6d3e3] transition whitespace-nowrap"
                 >
-                  {typeof Icon === 'string' ? (
-                    <span className="text-xl mr-1.5">{Icon}</span>
+                  {typeof Icon === "string" ? (
+                    <span className="text-xl">{Icon}</span>
                   ) : (
-                    Icon && <Icon className="w-5 h-5 mr-1.5" />
+                    Icon && <Icon className="w-5 h-5" />
                   )}
-                  <span className="font-medium">{label}</span>
+                  {label}
                 </Link>
               )
             )}
@@ -124,8 +123,8 @@ export default function Navbar({
 
         {/* Mobile Menu Panel */}
         {isMobileMenuOpen && (
-          <nav className="md:hidden bg-[#304674] pt-2 pb-3 space-y-1 border-t border-white/20">
-            {navLinks.map(({ href, icon: Icon, label, variant, className: linkClassName }, idx) =>
+          <nav className="md:hidden bg-[#304674] pt-2 pb-4 space-y-1 border-t border-white/20">
+            {navLinks.map(({ href, icon: Icon, label, variant }, idx) =>
               variant === "primary" ? (
                 <Link
                   key={idx}
@@ -140,9 +139,9 @@ export default function Navbar({
                   key={idx}
                   href={href}
                   onClick={closeMobileMenu}
-                  className={`flex items-center px-4 py-2 text-white hover:text-[#c6d3e3] hover:bg-white/10 rounded-md transition ${linkClassName || ''}`}
+                  className="flex items-center px-4 py-2 text-white hover:text-[#c6d3e3] hover:bg-white/10 rounded-md transition"
                 >
-                  {typeof Icon === 'string' ? (
+                  {typeof Icon === "string" ? (
                     <span className="text-xl mr-2">{Icon}</span>
                   ) : (
                     Icon && <Icon className="w-5 h-5 mr-2" />
