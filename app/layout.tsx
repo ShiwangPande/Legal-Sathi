@@ -35,6 +35,7 @@ export default function RootLayout({
         <body className={`${inter.className} bg-[#d8e1e8] text-[#304674]`}>
           <Providers>
             {children}
+            <Analytics />
             <ChatBot />
           </Providers>
         </body>
