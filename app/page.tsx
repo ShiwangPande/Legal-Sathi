@@ -3,6 +3,8 @@ import Link from "next/link"
 import { ArrowRight } from "lucide-react"
 import VolunteerForm from "@/components/volunteer-form"
 import Image from "next/image"
+import OurWorkGallery from "@/components/OurWorkGallery";
+import Testimonials from "@/components/Testimonials";
 
 async function getLanguages() {
   return await prisma.language.findMany({
@@ -77,6 +79,12 @@ export default async function HomePage() {
           ))}
         </div>
       </main>
+
+      {/* Testimonials Section */}
+      <Testimonials />
+
+      {/* Our Work Gallery Section */}
+      <OurWorkGallery />
 
       {/* Footer */}
       <footer className="bg-[#304674] text-white py-4 text-center text-sm">
