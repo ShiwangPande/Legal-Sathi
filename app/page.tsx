@@ -5,6 +5,7 @@ import VolunteerForm from "@/components/volunteer-form"
 import Image from "next/image"
 import OurWorkGallery from "@/components/OurWorkGallery";
 import Testimonials from "@/components/Testimonials";
+import ImpactCounter from "@/components/ImpactCounter";
 
 async function getLanguages() {
   return await prisma.language.findMany({
@@ -79,6 +80,36 @@ export default async function HomePage() {
           ))}
         </div>
       </main>
+
+      {/* Impact Metrics */}
+      <section className="w-full py-16 px-2 md:px-0 bg-background text-foreground">
+        <div className="max-w-5xl mx-auto">
+          <h3 className="text-2xl md:text-3xl font-bold text-center mb-6 text-[#1e3c64]">
+            Impact
+          </h3>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            {/* Workers Reached */}
+            <ImpactCounter
+              end={1000}
+              label="No. of workers reached"
+              plus
+            />
+            {/* Sessions Held */}
+            <ImpactCounter
+              end={50}
+              label="Sessions held"
+              plus
+            />
+            {/* Languages */}
+            <ImpactCounter
+              end={languages.length}
+              label="Languages"
+            />
+          </div>
+        </div>
+      </section>
+
+
 
       {/* Testimonials Section */}
       <Testimonials />

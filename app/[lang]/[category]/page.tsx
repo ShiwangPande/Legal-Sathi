@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { getSiteTranslations, t } from "@/lib/translations";
 import Navbar from "@/components/Navbar";
 import AudioPlayerWrapper from "@/components/AudioPlayerWrapper";
+import ReadAloudButton from "@/components/ReadAloudButton";
 
 interface Props {
   params: { lang: string; category: string };
@@ -88,6 +89,15 @@ export default async function CategoryPage({ params }: Props) {
 
                   <div className="text-[#304674] text-base leading-relaxed whitespace-pre-wrap">
                     {right.script}
+                  </div>
+
+                  {/* Read Aloud Button */}
+                  <div className="mt-4 flex gap-2">
+                    <ReadAloudButton 
+                      text={right.script} 
+                      title={right.title}
+                      language={langCode}
+                    />
                   </div>
 
                   {right.learnMoreUrl && (

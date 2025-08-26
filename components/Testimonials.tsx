@@ -11,30 +11,35 @@ const testimonials = [
   {
     name: 'Promod Kumar Yadav',
     location: 'Patna, Bihar',
+    image: 'https://res.cloudinary.com/dqv4mucxh/image/upload/v1756230943/img3_evdmvu.jpg',
     text: 'आठ घंटे का काम करके सिर्फ ₹४००० मिलते थे, वो भी दो-दो हफ़्ते लेट। लीगल साथी की ऑडियो सुनी और मालिक से सीधा बात की। अब ₹७००० वक़्त पर मिलता है।',
     rating: 5,
   },
   {
     name: 'Pooja Sharma',
     location: 'Jaipur, Rajasthan',
+    image: 'https://res.cloudinary.com/dqv4mucxh/image/upload/v1756230943/poojasharma_zwx1qk.jpg',
     text: 'कारखाने में रोज़ १०-१२ घंटे काम होता था, पर तनख्वाह में overtime का एक रुपया नहीं। लीगल साथी से जाना कि मज़दूरों के भी अधिकार होते हैं। अब हर घंटे का हिसाब है।',
     rating: 5,
   },
   {
     name: 'Debashis Roy',
     location: 'Kolkata, West Bengal',
+    image: 'https://res.cloudinary.com/dqv4mucxh/image/upload/v1756230943/img2_icqpum.jpg',
     text: 'আগে বেশি সময় কাজ করলেও, টাকা কম দিত। মালিক বলতো অ্যাডজাস্ট করো। লিগ্যাল সাথী বলেছে, আইন অনুযায়ী ওভারটাইম এর টাকাও পাওয়ার অধিকার আছে। আমি এখন চুপ করি না।',
     rating: 5,
   },
   {
     name: 'Kishore Patil',
     location: 'Pune, Maharashtra',
+    image: 'https://res.cloudinary.com/dqv4mucxh/image/upload/v1756230943/imag1_aqvjwu.jpg',
     text: 'They deducted PF every month but never showed any receipt. Legal Saathi helped me check the UAN portal. Turns out, they hadn\'t deposited for 8 months. Now I keep full record.',
     rating: 5,
   },
   {
     name: 'Nagraj Shetty',
     location: 'Whitefield, Bangalore',
+    image: 'https://res.cloudinary.com/dqv4mucxh/image/upload/v1756230943/img4_zctoeu.jpg',
     text: 'ಪಿಎಫ್ ಕಟ್ ಮಾಡ್ತಾ ಇದ್ದರು ಆದರೆ ಕಂಪನಿಯವರು ಹಣ ಜಮೆ ಮಾಡ್ತಿರ್ಲಿಲ್ಲ. ಲೀಗಲ್ ಸಾಥಿಯಿಂದ ತಿಳಿದು ಆಫೀಸ್ನವರ ಬಳಿ ಕೇಳಿದೆ. ಈಗ ಎಲ್ಲವೂ ಸರಿಯಾಗಿ ಜಮೆ ಆಗ್ತಾ ಇದೆ.',
     rating: 5,
   },
@@ -47,12 +52,14 @@ const testimonials = [
   {
     name: 'Rekha Narsimhan',
     location: 'Indiranagar, Bangalore',
+    image: 'https://res.cloudinary.com/dqv4mucxh/image/upload/v1756230944/img5_xmlcqb.jpg',
     text: 'ನೋವು ಇದ್ದರೂ ಅವರು ಹಕ್ಕಿಲ್ಲದ ಕೆಲಸಗಳಿಗೆ ಕಳಿಸುತ್ತಿದ್ದರು. ಲೀಗಲ್ ಸಾಥಿಯಿಂದ ನನಗೆ ಹಕ್ಕುಗಳ ಅರಿವು ಆಯ್ತು. ಈಗ ಬೋನಸ್ ₹3000 ಸಿಕ್ಕಿದೆ, ಮೊದಲ ಬಾರಿಗೆ.',
     rating: 5,
   },
   {
     name: 'Anjali Rani',
     location: 'Haryana',
+    image: 'https://res.cloudinary.com/dqv4mucxh/image/upload/v1756230943/img6_mcyxkm.jpg',
     text: 'They kept saying I was just a trainee so no salary. Legal Saathi explained the exploitation. I raised it with HR. Got paid for 3 months in one go.',
     rating: 5,
   },
@@ -119,10 +126,14 @@ function StarRating({ rating }: { rating: number }) {
   );
 }
 
-function UserAvatar({ name }: { name: string }) {
+function UserAvatar({ name, image }: { name: string, image: string }) {
   return (
     <div className="w-16 h-16 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-semibold text-lg shadow-lg border-2 border-white">
-      {name.split(' ').map(n => n[0]).join('').toUpperCase()}
+      {image ? (
+      <img src={image} alt={name} className="w-full h-full object-cover rounded-full" />
+      ) : (
+       name.split(' ').map(n => n[0]).join('').toUpperCase()
+        )}
     </div>
   );
 }
@@ -179,7 +190,7 @@ export default function Testimonials() {
                     <Card className="h-full flex flex-col items-center justify-between shadow-lg bg-card/80 dark:bg-card/60 transition-colors">
                       <CardHeader className="flex flex-col items-center gap-2 pb-2">
                         <div className="mb-2">
-                          <UserAvatar name={t.name} />
+                          <UserAvatar name={t.name} image={t.image} />
                         </div>
                         <CardTitle className="text-lg text-center leading-tight">
                           {t.name}
@@ -202,72 +213,7 @@ export default function Testimonials() {
       </section>
 
       {/* Flipping Card Testimonials (previous version, for comparison) */}
-      <section className="w-full py-8 px-2 md:px-0 bg-background text-foreground">
-        <div className="max-w-xl mx-auto text-center mb-6">
-          <motion.h3
-            className="text-2xl md:text-3xl font-bold mb-2"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-          >
-            Featured Testimonial
-          </motion.h3>
-        </div>
-        <div className="relative flex items-center justify-center max-w-md mx-auto">
-          <button
-            className="absolute left-0 z-10 bg-card/80 dark:bg-card/60 rounded-full p-2 shadow hover:bg-accent transition"
-            onClick={handlePrev}
-            aria-label="Previous"
-          >
-            <ArrowLeft className="w-6 h-6" />
-          </button>
-          <div className="w-80 h-96 flex items-center justify-center cursor-pointer select-none" onClick={() => setFlipped((f) => !f)}>
-            <motion.div
-              className="relative w-full h-full"
-              style={{ perspective: 1200 }}
-            >
-              {/* Front Side */}
-              <motion.div
-                className="absolute w-full h-full rounded-xl shadow-lg bg-card/80 dark:bg-card/60 flex flex-col items-center justify-center overflow-hidden"
-                animate={{ rotateY: flipped ? 180 : 0 }}
-                transition={{ duration: 0.6 }}
-                style={{ backfaceVisibility: 'hidden' }}
-              >
-                <div className="mt-8 mb-4">
-                  <UserAvatar name={testimonials[current].name} />
-                </div>
-                <div className="text-xl font-semibold mb-1">{testimonials[current].name}</div>
-                <div className="text-sm text-muted-foreground mb-4">{testimonials[current].location}</div>
-                <div className="text-xs text-muted-foreground mt-auto mb-6">Click to flip</div>
-              </motion.div>
-              {/* Back Side */}
-              <motion.div
-                className="absolute w-full h-full rounded-xl shadow-lg bg-card/80 dark:bg-card/60 flex items-center justify-center px-6 text-lg font-medium text-center"
-                animate={{ rotateY: flipped ? 0 : -180 }}
-                transition={{ duration: 0.6 }}
-                style={{ backfaceVisibility: 'hidden', transform: 'rotateY(180deg)' }}
-              >
-                {testimonials[current].text}
-              </motion.div>
-            </motion.div>
-          </div>
-          <button
-            className="absolute right-0 z-10 bg-card/80 dark:bg-card/60 rounded-full p-2 shadow hover:bg-accent transition"
-            onClick={handleNext}
-            aria-label="Next"
-          >
-            <ArrowRight className="w-6 h-6" />
-          </button>
-        </div>
-        <div className="flex justify-center mt-4 gap-2">
-          {testimonials.map((_, idx) => (
-            <span
-              key={idx}
-              className={`inline-block w-2 h-2 rounded-full ${idx === current ? 'bg-primary' : 'bg-muted-foreground/30'}`}
-            />
-          ))}
-        </div>
-      </section>
+     
     </>
   );
 } 
