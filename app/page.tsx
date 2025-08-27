@@ -90,13 +90,13 @@ export default async function HomePage() {
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             {/* Workers Reached */}
             <ImpactCounter
-              end={1000}
+              end={11000}
               label="No. of workers reached"
               plus
             />
             {/* Sessions Held */}
             <ImpactCounter
-              end={50}
+              end={80}
               label="Sessions held"
               plus
             />
