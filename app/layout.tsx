@@ -9,10 +9,10 @@ import { Analytics } from "@vercel/analytics/next"
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "Legal Saathi",
-  description: "Empowering daily wage workers with legal knowledge",
+  title: "Janam",
+  description: "Maternal health, safe birthing, and midwifery training",
   manifest: "/site.webmanifest",
-  themeColor: "#98bad5",
+  themeColor: "#2E7D32",
   viewport: "width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
 }
 
@@ -32,7 +32,7 @@ export default function RootLayout({
           <meta name="apple-mobile-web-app-title" content="Legal Saathi" />
           <link rel="manifest" href="/site.webmanifest" />
         </head>
-        <body className={`${inter.className} bg-[#d8e1e8] text-[#304674]`}>
+        <body className={`${inter.className} bg-[#FFF3E6] text-[#424242]`}>
           <Providers>
             {children}
             <Analytics />

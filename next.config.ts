@@ -9,7 +9,7 @@ const nextConfig = {
     ignoreBuildErrors: true,
   },
   images: {
-    domains: ['utfs.io'],
+    domains: ['utfs.io','tylckqqe6h.ufs.sh'],
     unoptimized: true,
   },
   async headers() {
